@@ -4,9 +4,15 @@ import { Colaborador, Order, Reserva, Servicio, Venta } from '../../../../model'
 import { isValidObjectId } from 'mongoose';
 import { Iservicio } from '../../../../interface';
 
-const datar = {
+const esNumero = (valor: any): boolean => {
+    if (typeof valor === 'number') {
+        return !isNaN(valor);
+    }
 
+    const numero = Number(valor);
+    return !isNaN(numero);
 }
+
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -46,7 +52,7 @@ const getVenta = async (req: NextApiRequest, res: NextApiResponse) => {
 const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
 
-        const { colaborador, orden, nureserva, careserva, hora, iniPago } = req.body as datar;
+        const { colaborador, orden, nureserva, careserva, hora, iniPago } = req.body;
 
         if (!esNumero(careserva)) {
             return res.status(400).json({ message: 'La cantidad ingresada no es valida' });
