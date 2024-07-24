@@ -13,8 +13,8 @@ function isValidCateg(value: any): value is Categ {
 }
 
 const zoneTimea = () => {
-    const now = new Date(); // Obtiene la fecha y hora actuales en UTC
-    const timeZone = 'America/Lima'; // Zona horaria deseada
+    const now = new Date();
+    const timeZone = 'America/Lima';
     return toZonedTime(now, timeZone);
 }
 
@@ -100,6 +100,8 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             state: true
         }).lean();
 
+        console.log(colaboradores)
+
         await db.disconnect();
 
         const uniqueHours: { [key: string]: boolean } = {};
@@ -159,6 +161,9 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             }
         });
 
+
+        console.log(colaboradores);
+
         if (startOfDay(fechaSelect).toISOString() === startOfDay(mindata()).toISOString()) {
             const nowTime = mindata().getHours() * 60 + mindata().getMinutes();
             const thresholdMinutes = 60;
@@ -179,7 +184,7 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte a CinCout, no se pudor cargar los departametos'
+            message: 'contacte a monna'
         })
     }
 }

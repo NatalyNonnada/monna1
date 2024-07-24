@@ -154,7 +154,7 @@ const postOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte a CinCout, no se pudo registrar la orden'
+            message: 'contacte a monna, no se pudo registrar la orden'
         })
     }
 }
@@ -223,7 +223,7 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte a MONNA, no se pudor cargar su reserva'
+            message: 'contacte a monna, no se pudor cargar su reserva'
         })
     }
 
