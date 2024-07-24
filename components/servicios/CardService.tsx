@@ -21,8 +21,11 @@ export const CardService = ({ data, handleSelect }: Props) => {
                 <TextToggle text={data.description} initialLength={60} />
             </CardContent>
             <CardActions style={{ justifyContent: 'end' }}>
-                {/* <Button onClick={() => handleSelect(data)} variant='contained' color='primary'>Seleccionar servicio</Button> */}
-                <button onClick={() => handleSelect(data)} className='fSJGrc'>Seleccionar servicio</button>
+                {
+                    data.category !== 'Adicionales' && (
+                        <button onClick={() => handleSelect(data)} className='fSJGrc'>Seleccionar servicio</button>
+                    )
+                }
             </CardActions>
         </Card>
     )

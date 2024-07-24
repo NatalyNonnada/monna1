@@ -24,7 +24,7 @@ const getOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
 
     try {
-        console.log('error');
+
         await db.connect();
 
         const Orderes = await Order.find().populate('Servicio')
@@ -37,7 +37,7 @@ const getOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte a CinCout, no se pudor cargar los departametos'
+            message: 'contacte a CinCout, no se pudor cargar la orden'
         })
     }
 
@@ -69,7 +69,7 @@ const updateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte con el admin'
+            message: 'contacte con CinCout, no se puedo actualizar la orden'
         })
     }
 }
@@ -98,7 +98,7 @@ const deleteOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     } catch (error) {
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte a CinCout'
+            message: 'contacte a CinCout, no se puedo eliminar la orden'
         })
     }
 }

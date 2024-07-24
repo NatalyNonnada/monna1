@@ -228,7 +228,7 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte con el admin'
+            message: 'contacte con CinCout. No ser puedo crear la reserva'
         })
     }
 }

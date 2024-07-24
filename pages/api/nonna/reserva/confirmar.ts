@@ -103,7 +103,7 @@ const confirmReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte con el admin'
+            message: 'contacte con CinCout. No ser pudo confirmar la reserva'
         })
     }
 }
@@ -152,7 +152,7 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte con el admin'
+            message: 'contacte con el CinCout, no se puedo finalizar la reserva'
         })
     }
 }

@@ -154,7 +154,7 @@ const postOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte a monna, no se pudo registrar la orden'
+            message: 'contacte a monna, no se pudo registrar su cita'
         })
     }
 }

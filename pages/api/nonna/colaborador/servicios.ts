@@ -85,7 +85,7 @@ const updateServicios = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte a CinCout, no se pudor cargar los departametos'
+            message: 'contacte a CinCout, no se pudo actualizar el servicio'
         })
     }
 

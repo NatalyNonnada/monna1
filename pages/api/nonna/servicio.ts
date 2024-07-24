@@ -43,7 +43,7 @@ const getServicio = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte a CinCout, no se pudor cargar los departametos'
+            message: 'contacte a CinCout, no se pudor cargar los servicios'
         })
     }
 
@@ -81,7 +81,7 @@ const updateServicio = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte con el admin'
+            message: 'contacte con CinCout. No se pudo actualizar el servicio'
         })
     }
 }
@@ -117,7 +117,7 @@ const createServicio = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte con CinCout, no se puedo registrar'
+            message: 'contacte con CinCout, no se puedo registrar el servicio'
         })
     }
 }
