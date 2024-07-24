@@ -8,17 +8,38 @@ import { capitalize, initFecha } from '../../utils';
 import { IHour, Iservicio, ISummary } from '../../interface';
 import { GridHoras } from './GridHoras';
 
-const mindata = () => {
+// const mindata = () => {
+//     try {
+//         const minDate = new Date;
+//         let options = { timeZone: 'America/Lima' };
+//         let eastCoastTime = minDate.toLocaleDateString('es-PE', options).split("/").reverse().join("-");
+//         return new Date(`${eastCoastTime}`);
+//     } catch (error) {
+//         console.log('error 1')
+//         return new Date()
+//     }
+// }
+
+const mindata = (): Date => {
     try {
-        const minDate = new Date;
-        let options = { timeZone: 'America/Lima' };
-        let eastCoastTime = minDate.toLocaleDateString('es-PE', options).split("/").reverse().join("-");
-        return new Date(`${eastCoastTime}`);
+        const minDate = new Date();
+        const options: Intl.DateTimeFormatOptions = { timeZone: 'America/Lima', year: 'numeric', month: '2-digit', day: '2-digit' };
+        const formatter = new Intl.DateTimeFormat('es-PE', options);
+        const parts = formatter.formatToParts(minDate);
+
+        // Extraer las partes de la fecha y formatear en 'YYYY-MM-DD'
+        const year = parts.find(part => part.type === 'year')?.value ?? '2024';  // Default to 1970 if undefined
+        const month = parts.find(part => part.type === 'month')?.value ?? '07';  // Default to January if undefined
+        const day = parts.find(part => part.type === 'day')?.value ?? '01';    // Default to 1st if undefined
+
+        const formattedDate = `${year}-${month}-${day}`;
+        return new Date(formattedDate);
     } catch (error) {
-        console.log('error 1')
-        return new Date()
+        console.log('error 1', error);
+        return new Date();
     }
 }
+
 
 let today = mindata();
 
