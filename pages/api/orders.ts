@@ -169,6 +169,8 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Reserva no valida' });
         }
 
+        await db.connect();
+
         const existOr = await Order.findById({ _id: id }).populate('Servicio').lean();
 
         const servicr: Iservicio = {

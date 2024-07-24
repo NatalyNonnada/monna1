@@ -89,6 +89,8 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Número de reserva no válido' });
         }
 
+        await db.connect();
+
         //verificamos si existe la orden
         const dbOrden = await Order.findById({ _id: orden }).populate('Servicio').lean();
 

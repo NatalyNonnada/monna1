@@ -79,7 +79,6 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const fechaSelect = new Date(`${data.selectedDate}`);
-        console.log(`Fecha recivida ${fechaSelect}`);
 
         const fechaLimite = new Date();
         fechaLimite.setDate(mindata().getDate() + 21);
@@ -160,23 +159,13 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             }
         });
 
-        console.log(`Fechas en numeros - resivida: ${fechaSelect}`)
-        console.log(`Fechas en numeros - sistema: ${mindata()}`)
-
         if (startOfDay(fechaSelect).toISOString() === startOfDay(mindata()).toISOString()) {
-            console.log('entro')
-            console.log(`Fecha del sistema: ${mindata()}`)
             const nowTime = mindata().getHours() * 60 + mindata().getMinutes();
-
-            console.log(`Nueva hora: ${nowTime}`)
             const thresholdMinutes = 60;
             const thresholdTime = nowTime + thresholdMinutes;
-            console.log(`Hora limite: ${thresholdTime}`)
-
             const filteredShifts = result.filter(shift => {
                 const shiftTime = parseTimeToDate(shift.hour);
                 const shiftMinutes = shiftTime.getHours() * 60 + shiftTime.getMinutes();
-                console.log(`Hora seleccionada: ${shiftMinutes}`)
                 return shiftMinutes >= thresholdTime;
             });
 
