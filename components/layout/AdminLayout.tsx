@@ -15,7 +15,6 @@ export const AdminLayout: FC<Props> = ({ children, title, subTitle, icon }) => {
             <nav>
                 <AdminNavbar />
             </nav>
-            {/* <SideMenu /> */}
 
             <main style={{
                 margin: '60px 0 auto',

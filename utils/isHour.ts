@@ -48,9 +48,9 @@ export const isAfternoonTime = (time: string): boolean => {
 
     const [hours, minutes] = time.split(':').map(Number);
 
-    if (hours >= 3 && hours < 6.30) {
+    if (hours >= 3 && hours < 7.30) {
         return true;
-    } else if (hours === 6 && minutes === 30) {
+    } else if (hours === 7 && minutes === 30) {
         return true;
     }
 
