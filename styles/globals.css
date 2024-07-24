@@ -105,7 +105,6 @@ body {
 
 .title-cab {
   color: var(--color-cuarte-2);
-  font: var(--typography-header-xl-bold, 700 40px / 44px sans-serif)
 }
 
 .card-hora {
