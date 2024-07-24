@@ -34,42 +34,7 @@ export const BannerHome: FC<BackgroundImageComponentProps> = ({ imageUrl }) => {
                     }}
                     className='svg-container' >
                 </Grid>
-                {/* <Grid item sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }} md={4} lg={4}>
-                    <Card>
-                        <CardContent>
-                            <div className='info-card'>
-                                <Link href="http://wa.me/51993759147?" target='_blank'>
-                                    <div>
-                                        <PlaceIcon style={{ fontSize: '20px' }} />
-                                        <Typography className='info-card-text'>Jirón Dos de Mayo 217, Cajamarca, Peru</Typography>
-                                    </div>
-                                </Link>
-                                <div>
-                                    <PhoneIcon style={{ fontSize: '20px' }} />
-                                    <Typography className='info-card-text'>993 759 147</Typography>
-                                </div>
-                                <Link href="http://wa.me/51993759147?" target='_blank'>
-                                    <div>
-                                        <WhatsAppIcon style={{ fontSize: '20px' }} />
-                                        <Typography className='info-card-text'>Contáctanos por Whatsapp!</Typography>
-                                    </div>
-                                </Link>
-                                <div onClick={() => setOpen(true)}>
-                                    <QueryBuilderIcon style={{ fontSize: '20px' }} />
-                                    <Typography className='info-card-text'>Ver horario</Typography>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </Grid> */}
             </Grid>
-            {/* <Grid item sx={{ display: { xs: 'flex', sm: 'flex', md: 'none' } }} xs={12} sm={12}>
-                <div className='panel-Selector' onClick={() => setOpen(true)}>
-                    <p className='epvaFE'>Contacto y ubicación</p>
-                </div>
-            </Grid> */}
-            {/* <CardContacto open={open} handleClose={handleClose} /> */}
         </>
-
     )
 }
