@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { addDays, format, startOfWeek, isBefore, isSameDay, isSunday, isSaturday, startOfDay } from 'date-fns';
+import { addDays, format, startOfWeek, isBefore, isSameDay, isSunday, startOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Box, Card, Divider, IconButton, Typography } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
@@ -8,11 +8,16 @@ import { capitalize, initFecha } from '../../utils';
 import { IHour, Iservicio, ISummary } from '../../interface';
 import { GridHoras } from './GridHoras';
 
-export const mindata = () => {
-    const minDate = new Date;
-    let options = { timeZone: 'America/Lima' };
-    let eastCoastTime = minDate.toLocaleDateString('es-PE', options).split("/").reverse().join("-");
-    return new Date(`${eastCoastTime}`);
+const mindata = () => {
+    try {
+        const minDate = new Date;
+        let options = { timeZone: 'America/Lima' };
+        let eastCoastTime = minDate.toLocaleDateString('es-PE', options).split("/").reverse().join("-");
+        return new Date(`${eastCoastTime}`);
+    } catch (error) {
+        console.log('error 1')
+        return new Date()
+    }
 }
 
 interface Props {
