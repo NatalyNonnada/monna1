@@ -20,6 +20,8 @@ const mindata = () => {
     }
 }
 
+let today = mindata();
+
 interface Props {
     total: number;
     date: string;
@@ -40,8 +42,7 @@ export const SelectDate = ({ total, date, hour = {
     const [currentDate, setCurrentDate] = useState(mindata());
     const [controlDay, setcontrolDay] = useState(0);
     const [fillter, setFillter] = useState<IHour[]>([]);
-
-    let today = mindata();
+    console.log(today)
 
     const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 0 });
 
