@@ -1,4 +1,3 @@
-import React from 'react';
 import { IHour } from '../../interface';
 import { Card, CardContent, Grid, Typography } from '@mui/material';
 
