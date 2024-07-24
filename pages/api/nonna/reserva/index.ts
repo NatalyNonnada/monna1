@@ -103,21 +103,18 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
             ...dbOrden.Servicio as unknown as Iservicio
         };
 
-        await db.connect();
-        //verificamos si existe el servicio solicitado
         const dbServicio = await Servicio.findById({ _id: servicr._id?.toString() });
+
         if (!dbServicio) {
             await db.disconnect();
             return res.status(400).json({ message: 'No existe el servicio' });
         }
 
-        //verficamos si el monto de reserva es el correcto
         if (careserva < dbServicio.reser) {
             await db.disconnect();
             return res.status(400).json({ message: `Para confirmar la reserva el monto tiene que ser igual o mayor a S/${dbServicio.reser}` });
         }
 
-        //verificamos si existe el colaborador solicitado
         const dbColaborador = await Colaborador.findById({ _id: colaborador });
         if (!dbColaborador) {
             await db.disconnect();

@@ -8,7 +8,7 @@
   --color-cuarte-2: #FFB3C6;
   --color-quinto: #3919ef;
   --title-home1-font: 18px;
-  --font-family: Roboto, sans-serif;
+  --font-family: sans-serif;
   --background-body: rgba(251, 241, 241, 0.915);
   --background-body-2: rgba(255, 255, 255, 0.915);
   --font-alert: 15px;
@@ -16,16 +16,16 @@
 
   /* otro */
 
-  --typography-header-xl-bold: 700 30px/44px var(--font-family);
-  --typography-header-sm-bold: 700 20px/44px var(--font-family);
-  --typography-cart-tile: 500 14px/14px var(--font-family);
+  --typography-header-xl-bold: 700 30px/44px sans-serif;
+  --typography-header-sm-bold: 700 20px/44px sans-serif;
+  --typography-cart-tile: 500 14px/14px sans-serif;
   --padding-bottom-image: 24%;
   --padding-banner-info: 10px;
   --margin-to-banner-info: 9px;
 }
 
 .fontfami {
-  font-family: var(--font-family);
+  font-family: sans-serif;
 }
 
 body {
@@ -54,27 +54,15 @@ body {
   /* O cualquier tamaño deseado */
   height: 0;
   padding-bottom: var(--padding-bottom-image);
-  /* Esto hace que el div sea cuadrado */
-  /* background-image: url('/portada.svg'); */
+  animation: fadeIn;
+  animation-duration: 1s;
   background-size: contain;
-  /* Asegura que la imagen mantenga su proporción */
+  background-image: url('/portada.png');
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 15px;
-  /* Agrega un borde de 2px de color negro */
   box-sizing: border-box;
-  /* Asegura que el borde se incluya en el tamaño total */
 }
-
-/* .svg-container img {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  object-fit: contain;
-  /* Asegura que la imagen mantenga su proporción */
-
 
 /* Color titulos */
 .reser-title {
@@ -108,16 +96,16 @@ body {
 }
 
 .title-cita {
-  font: var(--typography-header-xl-bold, 700 20px / 22px Roboto)
+  font: var(--typography-header-xl-bold, 700 20px / 22px sans-serif)
 }
 
 .title-hora {
-  font: var(--typography-header-sm-bold, 700 20px / 22px Roboto)
+  font: var(--typography-header-sm-bold, 700 20px / 22px sans-serif)
 }
 
 .title-cab {
   color: var(--color-cuarte-2);
-  font: var(--typography-header-xl-bold, 700 40px / 44px Roboto)
+  font: var(--typography-header-xl-bold, 700 40px / 44px sans-serif)
 }
 
 .card-hora {
@@ -137,18 +125,18 @@ body {
 
 @media screen and (min-width: 0) {
   .title-cab {
-    font: var(--typography-header-l-semibold, 600 28px / 36px Roboto);
+    font: var(--typography-header-l-semibold, 600 28px / 36px sans-serif);
   }
 
   .title-cita {
-    font: var(--typography-header-l-semibold, 600 28px / 36px Roboto);
+    font: var(--typography-header-l-semibold, 600 28px / 36px sans-serif);
   }
 
 }
 
 @media screen and (min-width: 768px) {
   .title-cab {
-    font: var(--typography-header-xl-bold, 700 40px / 44px Roboto);
+    font: var(--typography-header-xl-bold, 700 40px / 44px sans-serif);
   }
 
 }

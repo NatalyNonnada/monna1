@@ -15,19 +15,15 @@ export const HomeService = () => {
     const [selectCat, setSelectCat] = useState('Todos')
     const [fillter, setFillter] = useState<Iservicio[]>([]);
     const [loading, setLoading] = useState(false);
-    const { addDetail } = useCart();
     const { listService, isLoaded, getServicios } = useServiciou();
 
-    const router = useRouter();
 
     useEffect(() => {
         getServicios();
     }, []);
 
-    const handleSelect = (sel: Iservicio) => {
-        addDetail(sel);
+    const handleSelect = () => {
         setLoading(true);
-        router.push('/fecha');
     }
 
     const handleOption = (opt: string) => {

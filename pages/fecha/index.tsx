@@ -66,7 +66,7 @@ const FechaHoraPage: NextPage = () => {
                                 listaData={listaData}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={12} md={4} lg={4} className='esto'>
+                        <Grid item xs={12} sm={12} md={4} lg={4}>
                             <OrderSummary total={total} date={date} hour={hour} title={cart?.title || ''} />
                         </Grid>
                     </Grid>
@@ -76,7 +76,7 @@ const FechaHoraPage: NextPage = () => {
                         <Grid item sm={12} md={8} lg={8}>
                             <Address date={date} hour={hour} updateAddress={updateAddress} />
                         </Grid>
-                        <Grid item xs={12} sm={12} md={4} lg={4} className='esto ff'>
+                        <Grid item xs={12} sm={12} md={4} lg={4}>
                             <OrderSummary total={total} date={date} hour={hour} tap={value} title={cart?.title || ''} />
                         </Grid>
                     </Grid>

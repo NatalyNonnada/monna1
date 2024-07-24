@@ -1,14 +1,27 @@
-import { Button, Card, CardActions, CardContent, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
+import { Card, CardActions, CardContent, Typography } from '@mui/material';
 import { TextToggle } from '../ui';
 import { Iservicio } from '../../interface';
 import { priceBodyTemplate } from '../../utils/actionsTable';
+import { useCart } from '../../hooks';
 
 interface Props {
     data: Iservicio;
-    handleSelect: (sel: Iservicio) => void
+    handleSelect: () => void
 }
 
 export const CardService = ({ data, handleSelect }: Props) => {
+
+    const { addDetail } = useCart();
+
+    const router = useRouter();
+
+    const handleSelectService = () => {
+        handleSelect();
+        addDetail(data);
+        router.push('/fecha');
+    }
+
     return (
         <Card className='card-servicio-iten'>
             <CardContent>
@@ -23,7 +36,7 @@ export const CardService = ({ data, handleSelect }: Props) => {
             <CardActions style={{ justifyContent: 'end' }}>
                 {
                     data.category !== 'Adicionales' && (
-                        <button onClick={() => handleSelect(data)} className='fSJGrc'>Seleccionar servicio</button>
+                        <button onClick={handleSelectService} className='fSJGrc'>Seleccionar servicio</button>
                     )
                 }
             </CardActions>

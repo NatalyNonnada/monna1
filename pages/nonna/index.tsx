@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 
 type Data = {
     numberOfReservas: number;
-    paidOrders: number; // isPad true
+    paidOrders: number;
     numberOfService: number;
     numberOfColabor: number;
 }
