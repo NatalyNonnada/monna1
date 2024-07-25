@@ -4,6 +4,7 @@ import { Button, Card, CardContent, Checkbox, Divider, FormControl, FormControlL
 import { Iservicio } from '../../../interface';
 import { listPages, validations } from '../../../utils';
 import { styleCard } from '../styleCard';
+import Tiptap from '../../../components/ui/Tiptap';
 
 interface Props {
     open: boolean;
@@ -30,6 +31,8 @@ export const ServicioDetail = ({ open, servicio, handleClose, handleLoging, upda
         }
         setValue('estado', size, { shouldValidate: true });
     }
+
+    const handleContentChange = (jsonContent: any) => setValue('description', JSON.stringify(jsonContent))
 
     const handleRegister = (data: Iservicio) => {
         handleClose();
@@ -107,18 +110,24 @@ export const ServicioDetail = ({ open, servicio, handleClose, handleLoging, upda
                                     </Select>
                                 </FormControl>
                                 <Divider sx={{ my: 1 }} />
+                                <p>{getValues('description')}</p>
                                 <FormControl fullWidth>
                                     <TextField
                                         label="Descripción"
                                         variant='outlined'
                                         {...register('description', {
                                             required: 'Este campo es requido',
-                                            validate: validations.isTitleReg,
+                                            // validate: validations.isTitleReg,
                                         })}
                                         error={!!errors.description}
                                         helperText={errors.description?.message}
                                     />
+                                    <Tiptap
+                                        onChange={(newContent: string) => handleContentChange(newContent)}
+                                        initialContent={`{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Monna"}]}]}`}
+                                    />
                                 </FormControl>
+
                                 <FormControlLabel
                                     control={<Checkbox checked={getValues('estado')} />}
                                     label='Estado'

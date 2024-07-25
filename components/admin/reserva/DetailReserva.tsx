@@ -1,13 +1,12 @@
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Box, Button, Card, CardContent, Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { IReserva } from '../../../interface';
 import { initFecha, listPages, priceBodyTemplate, validations } from '../../../utils';
 import { useReserva, useVenta } from '../../../hooks';
 import { LoadingCircular } from '../../../components/ui';
-import { useContext, useEffect, useState } from 'react';
 import { SaleContext } from '../../../context';
 import { IColaborador } from '../../../interface/IColaborador';
-import { Receipt } from '../Receipt';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -248,8 +247,6 @@ export const DetailReserva = ({ reserva }: Props) => {
                 <Grid item xs={6} sm={6} md={6} lg={6}>
                     <Card>
                         <CardContent>
-                            {/* <Receipt items={ventas} total={subTotal} date={initFecha.mindataFor()} customerName={`${firstName} ${lastName}`} /> */}
-
                             <div id="receipt-content" style={{ maxWidth: '600px', margin: '0px auto' }}>
                                 <div style={{ padding: '20px' }}>
                                     <h1>MONNA</h1>

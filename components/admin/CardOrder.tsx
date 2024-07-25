@@ -21,7 +21,6 @@ export const CardOrder = ({ order }: Props) => {
     return (
         <Card sx={{ padding: 2, width: '100%', animation: 'fadeIn', animationDuration: '1s' }} className='respo-card-info'>
             <LoadingCircular loading={isLoading} />
-            {/* <Typography className='rfsFFFCOCard' textAlign='center'>Resumen de la orden</Typography> */}
             <br />
             <Card className='card-servicio'>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>

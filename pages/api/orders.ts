@@ -113,6 +113,8 @@ const postOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Ocurrio un error, disculpa las molestias' });
         }
 
+        await db.connect();
+
         const existeHour = await Colaborador.findOne({
             category: dbServicio.category,
             state: true,
@@ -194,6 +196,8 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
 
             return res.status(201).json(newOrder);
         }
+
+        await db.connect();
 
         const existReser = await Reserva.findOne({ idServicio: id });
 

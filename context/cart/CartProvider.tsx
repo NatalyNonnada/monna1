@@ -11,6 +11,7 @@ interface summary {
     hour?: IHour;
     total?: number;
     selectedDate?: string;
+    calenDate?: string;
 }
 
 
@@ -19,6 +20,7 @@ export interface CartState {
     cart?: Iservicio;
     date: string;
     selectedDate: string;
+    calenDate: string;
     hour?: IHour;
     total: number;
     shippingAddress?: IShoppingAddress;
@@ -29,7 +31,8 @@ const CART_INITIAL_STATE: CartState = {
     date: '',
     total: 0,
     hour: undefined,
-    selectedDate: ''
+    selectedDate: '',
+    calenDate: ''
 }
 
 interface Props {

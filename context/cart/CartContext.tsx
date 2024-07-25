@@ -5,6 +5,7 @@ interface ContextProps {
     isLoaded: boolean;
     date: string;
     selectedDate: string;
+    calenDate: string;
     hour?: IHour;
     total: number;
     cart?: Iservicio;

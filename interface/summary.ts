@@ -5,4 +5,5 @@ export interface ISummary {
     hour: IHour;
     total?: number;
     selectedDate?: string;
+    calenDate?: string;
 }

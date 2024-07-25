@@ -4,7 +4,7 @@ import { Iservicio } from '../interface';
 
 export const useCart = () => {
 
-    const { date, hour, total, cart, shippingAddress, selectedDate, addProductToCart, updateInfo, updateAddress, createOrder, clearCard } = useContext(CartContext);
+    const { date, hour, total, cart, shippingAddress, selectedDate, calenDate, addProductToCart, updateInfo, updateAddress, createOrder, clearCard } = useContext(CartContext);
 
     const addDetail = (info: Iservicio) => {
         addProductToCart(info)
@@ -17,6 +17,7 @@ export const useCart = () => {
         cart,
         shippingAddress,
         selectedDate,
+        calenDate,
         addDetail,
         updateInfo,
         updateAddress,

@@ -107,6 +107,12 @@ body {
   color: var(--color-cuarte-2);
 }
 
+.text-mult {
+  border-style: groove;
+  margin-top: 25px;
+  height: auto;
+}
+
 .card-hora {
   padding: -25px;
   cursor: pointer;

@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material';
-import { IHour } from '@/interface';
+import { IHour } from '../../../interface';
 
 interface Props { horas: IHour[] }
 

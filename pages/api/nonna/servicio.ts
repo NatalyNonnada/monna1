@@ -33,7 +33,7 @@ const getServicio = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         await db.connect();
 
-        const Servicios = await Servicio.find();
+        const Servicios = await Servicio.find().lean();
 
         await db.disconnect();
 

@@ -10,7 +10,7 @@ import { useCart, useServiciou } from '../../hooks';
 const FechaHoraPage: NextPage = () => {
 
     const [value, setValue] = useState<number>(0);
-    const { total, hour, date, cart, selectedDate, updateInfo, updateAddress, clearCard } = useCart();
+    const { total, hour, date, cart, selectedDate, calenDate, updateInfo, updateAddress, clearCard } = useCart();
     const { getColaHours, isLoaded, listaData } = useServiciou();
 
     const [loading, setLoading] = useState(true);
@@ -60,6 +60,7 @@ const FechaHoraPage: NextPage = () => {
                                 date={date}
                                 hour={hour}
                                 cart={cart}
+                                calenDate={calenDate}
                                 selectedDate={selectedDate}
                                 updateInfo={updateInfo}
                                 handleChandate={handleChandate}

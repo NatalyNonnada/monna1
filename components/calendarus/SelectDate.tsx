@@ -8,34 +8,18 @@ import { capitalize, initFecha } from '../../utils';
 import { IHour, Iservicio, ISummary } from '../../interface';
 import { GridHoras } from './GridHoras';
 
-// const mindata = () => {
-//     try {
-//         const minDate = new Date;
-//         let options = { timeZone: 'America/Lima' };
-//         let eastCoastTime = minDate.toLocaleDateString('es-PE', options).split("/").reverse().join("-");
-//         return new Date(`${eastCoastTime}`);
-//     } catch (error) {
-//         console.log('error 1')
-//         return new Date()
-//     }
-// }
-
 const mindata = (): Date => {
     try {
         const minDate = new Date();
         const options: Intl.DateTimeFormatOptions = { timeZone: 'America/Lima', year: 'numeric', month: '2-digit', day: '2-digit' };
         const formatter = new Intl.DateTimeFormat('es-PE', options);
         const parts = formatter.formatToParts(minDate);
-
-        // Extraer las partes de la fecha y formatear en 'YYYY-MM-DD'
-        const year = parts.find(part => part.type === 'year')?.value ?? '2024';  // Default to 1970 if undefined
-        const month = parts.find(part => part.type === 'month')?.value ?? '07';  // Default to January if undefined
-        const day = parts.find(part => part.type === 'day')?.value ?? '01';    // Default to 1st if undefined
-
-        const formattedDate = `${year}-${month}-${day}`;
+        const year = parts.find(part => part.type === 'year')?.value ?? '2024';
+        const month = parts.find(part => part.type === 'month')?.value ?? '07';
+        const day = parts.find(part => part.type === 'day')?.value ?? '01';
+        const formattedDate = `${year}-${month}-${day}T00:00:00`;
         return new Date(formattedDate);
     } catch (error) {
-        console.log('error 1', error);
         return new Date();
     }
 }
@@ -47,6 +31,7 @@ interface Props {
     total: number;
     date: string;
     selectedDate?: string;
+    calenDate?: string;
     hour?: IHour;
     cart?: Iservicio;
     updateInfo: (info: ISummary) => void;
@@ -57,12 +42,12 @@ interface Props {
 export const SelectDate = ({ total, date, hour = {
     hour: '',
     estate: false
-}, selectedDate = '', listaData, updateInfo, handleChandate }: Props) => {
-
+}, selectedDate = '', listaData, calenDate = '', updateInfo, handleChandate }: Props) => {
 
     const [currentDate, setCurrentDate] = useState(mindata());
     const [controlDay, setcontrolDay] = useState(0);
     const [fillter, setFillter] = useState<IHour[]>([]);
+
     console.log(today)
 
     const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 0 });
@@ -76,7 +61,10 @@ export const SelectDate = ({ total, date, hour = {
             setFillter([]);
             setCurrentDate(addDays(currentDate, 7));
             setcontrolDay(controlDay + 1);
-            updateInfo({ date: '', hour, total, selectedDate: '' })
+            updateInfo({
+                date: '', hour, total, selectedDate: '',
+                calenDate: ''
+            })
         }
     };
 
@@ -86,21 +74,30 @@ export const SelectDate = ({ total, date, hour = {
             const newDate = addDays(currentDate, -7);
             setCurrentDate(newDate);
             setcontrolDay(controlDay - 1);
-            updateInfo({ date: '', hour, total, selectedDate: '' })
+            updateInfo({
+                date: '', hour, total, selectedDate: '',
+                calenDate: ''
+            })
         }
     };
 
     const handleDayClick = (day: Date) => {
-        if (isSameDay(selectedDate, day)) {
+        if (isSameDay(calenDate, day)) {
             return;
         } else {
             setFillter([]);
-            updateInfo({ date: format(day, 'EEEE d MMMM yyy', { locale: es }), hour, total, selectedDate: `${initFecha.mindataClick(day)}` })
+            updateInfo({
+                date: format(day, 'EEEE d MMMM yyy', { locale: es }), hour, total, selectedDate: `${initFecha.mindataClick(day)}`,
+                calenDate: day.toString()
+            })
         }
     };
 
     const handleChangeDate = (da: IHour) => {
-        updateInfo({ date, hour: da, total, selectedDate: `${selectedDate}` });
+        updateInfo({
+            date, hour: da, total, selectedDate: `${selectedDate}`,
+            calenDate: calenDate
+        });
         handleChandate();
     }
 
@@ -123,14 +120,14 @@ export const SelectDate = ({ total, date, hour = {
                             <div className="bjxqdS">
                                 <button
                                     onClick={() => !isBefore(day, startOfDay(today)) && handleDayClick(day)}
-                                    className={`${"bBsbgX"}  ${isSameDay(day, selectedDate) ? "hDvcjI" : ''} ${isBefore(day, startOfDay(today)) ? "iYVmrx" : ''}`}
+                                    className={`${"bBsbgX"}  ${isSameDay(day, calenDate) ? "hDvcjI" : ''} ${isBefore(day, startOfDay(today)) ? "iYVmrx" : ''}`}
                                 >
                                     <div className='heKMRP'>
-                                        <p className={`${"hCfkWR"} ${isSunday(day) ? " hCfkGRIS" : ''}   ${isSameDay(day, today) ? " hCfkBL" : ''} ${isSameDay(day, selectedDate) ? "hCfkWI" : ''} ${isBefore(day, startOfDay(today)) ? "hCfkGRIS" : ''}`}>
+                                        <p className={`${"hCfkWR"} ${isSunday(day) ? " hCfkGRIS" : ''}   ${isSameDay(day, today) ? " hCfkBL" : ''} ${isSameDay(day, calenDate) ? "hCfkWI" : ''} ${isBefore(day, startOfDay(today)) ? "hCfkGRIS" : ''}`}>
                                             {capitalize(format(day, 'EEE', { locale: es }))}
                                         </p>
                                         <p
-                                            className={`${"hCfkWR"}  ${isSunday(day) ? " hCfkGRIS" : ''} ${isSameDay(day, today) ? " hCfkBL" : ''} ${isSameDay(day, selectedDate) ? "hCfkWI" : ''} ${isBefore(day, startOfDay(today)) ? "hCfkGRIS" : ''}`}
+                                            className={`${"hCfkWR"}  ${isSunday(day) ? " hCfkGRIS" : ''} ${isSameDay(day, today) ? " hCfkBL" : ''} ${isSameDay(day, calenDate) ? "hCfkWI" : ''} ${isBefore(day, startOfDay(today)) ? "hCfkGRIS" : ''}`}
                                             style={{ fontWeight: 700 }}
                                         >
                                             {format(day, 'd', { locale: es })}</p>

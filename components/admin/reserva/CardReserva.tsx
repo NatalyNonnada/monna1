@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import Link from 'next/link';
-import { Box, Button, Card, CardActions, Divider, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, Typography } from '@mui/material';
 import { IColaborador, IReserva } from '../../../interface';
-import { priceBodyTemplate } from '@/utils';
+import { priceBodyTemplate } from '../../../utils';
 
 interface Props {
     reserva: IReserva;

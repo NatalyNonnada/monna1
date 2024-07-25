@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Box, Button, Checkbox, Divider, FormControl, FormControlLabel, FormLabel, Modal, Typography } from '@mui/material'
+import { Box, Button, Checkbox, FormControl, FormControlLabel, FormLabel, Modal } from '@mui/material'
 import { styleCard } from '../styleCard';
 import { listPages } from '../../../utils';
 import { errorAlert } from '../../../alerts';

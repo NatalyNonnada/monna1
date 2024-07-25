@@ -8,25 +8,28 @@ import { Iservicio } from '../../../interface';
 import { listPages, validations } from '../../../utils';
 import { useServicio } from '../../../hooks';
 import { LoadingCircular } from '../../../components';
+import Tiptap from '../../../components/ui/Tiptap';
 
 const formdata: Iservicio = {
     title: '',
     price: 0,
     reser: 0,
-    description: '',
+    description: '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Monna"}]}]}',
     category: '',
     estado: false
 }
 
 const ServicioRegistroPage: NextPage = () => {
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<Iservicio>({ defaultValues: { ...formdata } });
+    const { register, handleSubmit, reset, setValue, getValues, formState: { errors } } = useForm<Iservicio>({ defaultValues: { ...formdata } });
 
     const { isLoaded, createServicio } = useServicio()
 
     useEffect(() => {
         reset({ ...formdata });
     }, [reset])
+
+    const handleContentChange = (jsonContent: any) => setValue('description', JSON.stringify(jsonContent))
 
     const handleRegister = (data: Iservicio) => {
         createServicio(data);
@@ -106,7 +109,7 @@ const ServicioRegistroPage: NextPage = () => {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid item xs={12} sm={12} md={12} lg={12}>
+                                {/* <Grid item xs={12} sm={12} md={12} lg={12}>
                                     <FormControl fullWidth>
                                         <TextField
                                             label="Descripción"
@@ -119,6 +122,12 @@ const ServicioRegistroPage: NextPage = () => {
                                             helperText={errors.description?.message}
                                         />
                                     </FormControl>
+                                </Grid> */}
+                                <Grid item xs={12} sm={12} md={12} lg={12} >
+                                    <Tiptap
+                                        onChange={(newContent: string) => handleContentChange(newContent)}
+                                        initialContent={`${getValues('description')}`}
+                                    />
                                 </Grid>
                             </Grid>
                             <Typography component='div' style={{ display: 'flex', justifyContent: 'center', marginTop: '15px', marginBottom: '5px' }}>

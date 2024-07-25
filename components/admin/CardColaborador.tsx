@@ -104,7 +104,6 @@ export const CardColaborador = ({ colaborador }: Props) => {
             </CardContent>
             <ModalCardCola open={open} listHd={servicios} handleClose={handleClose} />
             <CardActions >
-                {/* <button className='fSJGrc'>Ver colaborador</button> */}
                 <Link onClick={() => setIsLoading(true)} href={`/nonna/colaboradores/${colaborador._id?.toString()}`}>
                     <button className='fSJGrc'>Ver colaborador</button>
                 </Link>

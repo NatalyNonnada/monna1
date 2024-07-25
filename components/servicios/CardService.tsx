@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { Card, CardActions, CardContent, Typography } from '@mui/material';
-import { TextToggle } from '../ui';
+import { ContentWithToggle } from '../ui';
 import { Iservicio } from '../../interface';
 import { priceBodyTemplate } from '../../utils/actionsTable';
 import { useCart } from '../../hooks';
@@ -31,7 +31,7 @@ export const CardService = ({ data, handleSelect }: Props) => {
                 <Typography style={{ fontSize: '17px', fontWeight: '700' }}>
                     {priceBodyTemplate({ cambio: 'Soles', price: `${data.price}` })}
                 </Typography>
-                <TextToggle text={data.description} initialLength={60} />
+                <ContentWithToggle content={JSON.parse(data.description)} initialLength={90} />
             </CardContent>
             <CardActions style={{ justifyContent: 'end' }}>
                 {

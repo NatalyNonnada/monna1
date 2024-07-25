@@ -1,9 +1,8 @@
-import Link from 'next/link';
+import { useState } from 'react';
 import { Button, Card, CardActions, CardContent, Typography } from '@mui/material';
-import { TextToggle } from '../ui';
+import { ContentWithToggle } from '../ui';
 import { Iservicio } from '../../interface';
 import { priceBodyTemplate } from '../../utils/actionsTable';
-import { useState } from 'react';
 import { ServicioDetail } from './servicios';
 
 interface Props {
@@ -30,7 +29,7 @@ export const CardServiceAd = ({ data, setLoading, updateServicio }: Props) => {
                     <Typography style={{ fontSize: '17px', fontWeight: '700' }}>
                         {priceBodyTemplate({ cambio: 'Soles', price: `${data.price}` })}
                     </Typography>
-                    <TextToggle text={data.description} initialLength={60} />
+                    <ContentWithToggle content={JSON.parse(data.description)} initialLength={90} />
                 </CardContent>
                 <CardActions style={{ justifyContent: 'end' }}>
                     <Button onClick={() => setOpen(true)} className='fSJGrc'>Seleccionar servicio</Button>

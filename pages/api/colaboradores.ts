@@ -28,7 +28,12 @@ function esFinDeSemana(fechaIngresada: string): boolean {
     return diaSemana === 0;
 }
 
-// Función para convertir una hora en formato 'h:mm am/pm' a un objeto Date
+function esSabado(fechaIngresada: string): boolean {
+    const fechaIngresadaDate = new Date(fechaIngresada);
+    const diaSemana = fechaIngresadaDate.getDay();
+    return diaSemana === 6;
+}
+
 function parseTimeToDate(time: string): Date {
     const [timePart, modifier] = time.split(' ');
     let [hours, minutes] = timePart.split(':').map(Number);
@@ -127,19 +132,23 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
                         }
                     }
 
-                    if (colaborador.aftshift.length > 0) {
+                    if (!esSabado(`${data.selectedDate}`)) {
+                        if (colaborador.aftshift.length > 0) {
 
-                        const find = colaborador.date.find(a => a === `${codigo}${da.hora}`.replace(/\s/g, ""))
+                            const find = colaborador.date.find(a => a === `${codigo}${da.hora}`.replace(/\s/g, ""))
 
-                        if (!find) {
-                            colaborador.aftshift.forEach(turno => {
-                                if (!uniqueHours[turno.hour]) {
-                                    uniqueHours[turno.hour] = true;
-                                    result.push(turno);
-                                }
-                            });
+                            if (!find) {
+                                colaborador.aftshift.forEach(turno => {
+                                    if (!uniqueHours[turno.hour]) {
+                                        uniqueHours[turno.hour] = true;
+                                        result.push(turno);
+                                    }
+                                });
+                            }
                         }
+
                     }
+
 
                 })
             } else {
@@ -150,12 +159,14 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
                     }
                 });
 
-                colaborador.aftshift.forEach(turno => {
-                    if (!uniqueHours[turno.hour]) {
-                        uniqueHours[turno.hour] = true;
-                        result.push(turno);
-                    }
-                });
+                if (!esSabado(`${data.selectedDate}`)) {
+                    colaborador.aftshift.forEach(turno => {
+                        if (!uniqueHours[turno.hour]) {
+                            uniqueHours[turno.hour] = true;
+                            result.push(turno);
+                        }
+                    });
+                }
             }
         });
 

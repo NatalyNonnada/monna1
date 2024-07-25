@@ -25,8 +25,8 @@ const formatZonedDate = (date: Date): string => {
 };
 
 const zoneTimea = () => {
-    const now = new Date(); // Obtiene la fecha y hora actuales en UTC
-    const timeZone = 'America/Lima'; // Zona horaria deseada
+    const now = new Date();
+    const timeZone = 'America/Lima';
     return toZonedTime(now, timeZone);
 }
 
@@ -39,7 +39,7 @@ export const mindataFor = () => {
 }
 
 const addOneHour = (date: Date): Date => {
-    return add(date, { hours: 1 }); // Suma una hora a la fecha proporcionada
+    return add(date, { hours: 1 });
 };
 
 export const mindataSelec = () => {
