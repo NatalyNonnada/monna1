@@ -109,20 +109,6 @@ const ServicioRegistroPage: NextPage = () => {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                {/* <Grid item xs={12} sm={12} md={12} lg={12}>
-                                    <FormControl fullWidth>
-                                        <TextField
-                                            label="Descripción"
-                                            variant='outlined'
-                                            {...register('description', {
-                                                required: 'Este campo es requido',
-                                                validate: validations.isTitleReg,
-                                            })}
-                                            error={!!errors.description}
-                                            helperText={errors.description?.message}
-                                        />
-                                    </FormControl>
-                                </Grid> */}
                                 <Grid item xs={12} sm={12} md={12} lg={12} >
                                     <Tiptap
                                         onChange={(newContent: string) => handleContentChange(newContent)}

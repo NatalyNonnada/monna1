@@ -110,21 +110,10 @@ export const ServicioDetail = ({ open, servicio, handleClose, handleLoging, upda
                                     </Select>
                                 </FormControl>
                                 <Divider sx={{ my: 1 }} />
-                                <p>{getValues('description')}</p>
                                 <FormControl fullWidth>
-                                    <TextField
-                                        label="Descripción"
-                                        variant='outlined'
-                                        {...register('description', {
-                                            required: 'Este campo es requido',
-                                            // validate: validations.isTitleReg,
-                                        })}
-                                        error={!!errors.description}
-                                        helperText={errors.description?.message}
-                                    />
                                     <Tiptap
                                         onChange={(newContent: string) => handleContentChange(newContent)}
-                                        initialContent={`{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Monna"}]}]}`}
+                                        initialContent={`${getValues('description')}`}
                                     />
                                 </FormControl>
 
