@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Box, Button, Card, CardContent, Checkbox, Chip, Container, Divider, FormControl, FormControlLabel, Grid, IconButton, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Checkbox, Container, Divider, FormControl, FormControlLabel, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { IColaborador } from '../../interface';
 import { initFecha } from '../../utils';
 import { CalendarCola } from './CalendarCola';
-import { errorAlert } from '../../alerts';
 import { useColabora } from '../../hooks';
 import { LoadingCircular } from '../ui';
 import { ModalCardCola } from './ModalCardCola';
@@ -21,12 +20,12 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 interface nfechas {
   fecha: string,
-  hora: string,
+  horas: string[],
 }
 
 const blackData: nfechas = {
   fecha: '',
-  hora: '',
+  horas: [],
 }
 
 interface hors {
@@ -67,15 +66,19 @@ export const ColaboradorDetail = ({ colaborador }: Props) => {
   }
 
   const selectData = (dato: Value) => {
+    setValue('horas', [], { shouldValidate: true });
     setValue('fecha', initFecha.fomatDatea(dato), { shouldValidate: true })
   }
 
+
   const onChangeSize = (size: string) => {
-    const currentSizes = getValues('hora');
+    const currentSizes = getValues('horas');
     if (currentSizes.includes(size)) {
-      return setValue('hora', size, { shouldValidate: true });
+      return setValue('horas', currentSizes.filter(s => s !== size), { shouldValidate: true });
     }
-    setValue('hora', size, { shouldValidate: true });
+
+    setValue('horas', [...currentSizes, size], { shouldValidate: true });
+
   }
 
   useEffect(() => {
@@ -87,17 +90,23 @@ export const ColaboradorDetail = ({ colaborador }: Props) => {
   }
 
   const handleRegister = async (bloc: nfechas) => {
+    setSetIsLoaing(true);
+    const newHoras: string[] = [];
 
-    const filter = colaborador.listHd.find(p => p.hora === bloc.hora && p.fecha === bloc.fecha);
+    bloc.horas.forEach(da => {
 
-    if (!filter) {
+      const filter = colaborador.listHd.some(p => p.hora.toString() === da.toString() && p.fecha.toString() === bloc.fecha.toString());
+      if (!filter) {
+        newHoras.push(da);
+      }
+    })
+
+    setTimeout(async () => {
       setSetIsLoaing(true);
-      const { hasError } = await blocHora({ ...bloc, id: colaborador._id || '' });
+      const { hasError } = await blocHora({ ...bloc, horas: newHoras, id: colaborador._id || '' });
       setSetIsLoaing(hasError)
-    } else {
-      errorAlert('Horario ya bloqueado');
-      return;
-    }
+    }, 800);
+
   }
 
   useEffect(() => {
@@ -168,6 +177,32 @@ export const ColaboradorDetail = ({ colaborador }: Props) => {
             </CardContent>
           </Card>
         </Grid>
+        {/* aqui */}
+        <Grid item xs={12} sm={12} md={6} lg={6}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Card>
+                <CardContent>
+                  <Typography sx={{
+                    fontSize: '17px',
+                    fontWeight: '700',
+                    color: 'salmon',
+                    mb: 1
+                  }}
+                    textAlign='center'
+                  >
+                    Registrar nuevas fechas
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <CalendarCola selectData={selectData} />
+                  </Box>
+
+                </CardContent>
+              </Card>
+            </Grid>
+
+          </Grid>
+        </Grid>
         <Grid item xs={12} sm={12} md={6} lg={6}>
           <Card className='card-servicio-iten'>
             <CardContent>
@@ -191,90 +226,61 @@ export const ColaboradorDetail = ({ colaborador }: Props) => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={12} md={12} lg={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={12} md={6} lg={6}>
-              <Card>
-                <CardContent>
-                  <Typography sx={{
-                    fontSize: '17px',
-                    fontWeight: '700',
-                    color: 'salmon',
-                    mb: 1
-                  }}
-                    textAlign='center'
-                  >
-                    Registrar nuevas fechas
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <CalendarCola selectData={selectData} />
-                  </Box>
+        <Grid item xs={12} sm={12} md={6} lg={6}>
+          <Card>
+            <CardContent>
+              <form onSubmit={handleSubmit(handleRegister)}>
+                <Typography style={{ fontSize: '17px', fontWeight: '700' }}>Fecha que no trabaja</Typography>
+                <FormControl fullWidth>
+                  <TextField
+                    disabled={true}
+                    variant='filled'
+                    {...register('fecha', {
+                      required: 'Este campo es requido',
+                    })}
+                    error={!!errors.fecha}
+                    helperText={errors.fecha?.message}
+                  />
+                </FormControl>
+                <Divider sx={{ my: 2 }} />
+                <FormControl sx={{ mb: 1 }}>
+                  {
+                    colaborador.morshift.map(size => (
 
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={12} md={6} lg={6}>
-              <Card>
-                <CardContent>
-                  <form onSubmit={handleSubmit(handleRegister)}>
-                    <Typography style={{ fontSize: '17px', fontWeight: '700' }}>Fecha que no trabaja</Typography>
-                    <FormControl fullWidth>
-                      <TextField
-                        disabled={true}
-                        variant='filled'
-                        {...register('fecha', {
-                          required: 'Este campo es requido',
-                        })}
-                        error={!!errors.fecha}
-                        helperText={errors.fecha?.message}
+                      <FormControlLabel
+                        key={size.hour}
+                        control={<Checkbox checked={getValues('horas').includes(size.hour)} />}
+                        label={size.hour}
+                        onChange={() => onChangeSize(size.hour)}
                       />
-                    </FormControl>
-                    <Divider sx={{ my: 2 }} />
-                    <FormControl sx={{ mb: 1 }}>
-                      <Chip
-                        label="Es necesario la hora"
-                        color='error'
-                        variant='outlined'
-                        sx={{ display: getValues('hora').length <= 0 ? 'flex' : 'none' }}
+                    ))
+                  }
+                  {
+                    colaborador.aftshift.map(size => (
+                      <FormControlLabel
+                        key={size.hour}
+                        control={<Checkbox checked={getValues('horas').includes(size.hour)} />}
+                        label={size.hour}
+                        onChange={() => onChangeSize(size.hour)}
                       />
-                      {
-                        colaborador.morshift.map(size => (
-                          <FormControlLabel
-                            key={size.hour}
-                            control={<Checkbox checked={getValues('hora').includes(size.hour)} />}
-                            label={size.hour}
-                            onChange={() => onChangeSize(size.hour)}
-                          />
-                        ))
-                      }
-                      {
-                        colaborador.aftshift.map(size => (
-                          <FormControlLabel
-                            key={size.hour}
-                            control={<Checkbox checked={getValues('hora').includes(size.hour)} />}
-                            label={size.hour}
-                            onChange={() => onChangeSize(size.hour)}
-                          />
-                        ))
-                      }
-                    </FormControl>
-                    <Divider sx={{ my: 2 }} />
-                    <FormControl fullWidth>
-                      <Button
-                        type='submit'
-                        size='large'
-                        variant='contained'
-                        color='success'
-                        disabled={getValues('hora').length <= 0}
-                      >
-                        Agregar hora
-                      </Button>
-                    </FormControl>
-                  </form>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+                    ))
+                  }
+                </FormControl>
+                <Divider sx={{ my: 2 }} />
+                <FormControl fullWidth>
+                  <Button
+                    type='submit'
+                    size='large'
+                    variant='contained'
+                    color='success'
+                    disabled={getValues('horas').length <= 0}
+                  >
+                    Bloquear horas
+                  </Button>
+                </FormControl>
+              </form>
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
       <ModalCardCola open={open} listHd={servicios} handleClose={handleClose} />

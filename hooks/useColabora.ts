@@ -16,7 +16,7 @@ interface CretPagin {
 
 interface nfechas {
     fecha: string,
-    hora: string,
+    horas: string[],
     id: string
 }
 

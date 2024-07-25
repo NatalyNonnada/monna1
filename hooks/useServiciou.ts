@@ -33,21 +33,21 @@ export const useServiciou = () => {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response) {
-                    const { message } = error.response.data as controlErr;
-                    errorAlert(message);
+                    // const { message } = error.response.data as controlErr;
+                    // errorAlert(message);
                     setLoading(false);
                     setService([], 'list');
                 } else if (error.request) {
-                    errorAlert('La solicitud fue hecha pero no se recibió respuesta, contacte con CinCout');
+                    // errorAlert('La solicitud fue hecha pero no se recibió respuesta, contacte con CinCout');
                     setLoading(false);
                     setService([], 'list');
                 } else {
-                    errorAlert('Ocurrió un error al configurar la solicitud, contacte con CinCout');
+                    // errorAlert('Ocurrió un error al configurar la solicitud, contacte con CinCout');
                     setLoading(false);
                     setService([], 'list');
                 }
             } else {
-                errorAlert('Ocurrió un error, contacte con CinCout');
+                // errorAlert('Ocurrió un error, contacte con CinCout');
                 setLoading(false);
                 setService([], 'list');
             }

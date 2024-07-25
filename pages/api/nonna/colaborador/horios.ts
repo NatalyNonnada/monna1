@@ -4,6 +4,13 @@ import { IHour, Iservicio } from '../../../../interface';
 import { Colaborador, Order, Servicio } from '../../../../model';
 import { isValidObjectId } from 'mongoose';
 
+
+interface Infechas {
+    fecha: string,
+    horas: string[],
+    id: string
+}
+
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     switch (req.method) {
@@ -21,12 +28,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 }
 
-interface newCola {
-    _id: string;
-    fullnames: string
-    morshift: IHour[],
-    aftshift: IHour[]
-}
 
 const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 
@@ -67,6 +68,8 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
         await db.disconnect();
 
 
+
+
         const colaboradoresFiltrados = colaboradores.map(colaborador => {
 
             const newLish = colaborador.listHd.filter(a => a.fecha === dbOrder.date);
@@ -81,6 +84,7 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
                 const newaftshift = colaborador.aftshift.filter(p => p.hour !== dbOrder.hour);
 
                 newLish.forEach(da => {
+
                     const checkAndPushShift = (shiftList: IHour[], newShiftList: IHour[], shiftType: string) => {
                         const found: boolean = set.has(`${dbOrder.date}${da.hora}`.replace(/\s/g, ""));
                         if (!found) {
@@ -133,8 +137,8 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 const updateHora = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
 
-        const { id, fecha, hora } = req.body;
-        console.log({ id, fecha, hora })
+        const { id, fecha, horas } = req.body as Infechas;
+
         if (!id) {
             return res.status(400).json({ message: 'El colaborador es requerida' });
         }
@@ -143,7 +147,12 @@ const updateHora = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'El colaborador no  es válido' });
         }
 
-        await db.connect();
+        if (horas.length === 0) {
+            console.log('Termino')
+            return res.status(200).json({ message: 'ok' });
+        }
+
+        await db.checkConnection();
 
         const dbOrder = await Colaborador.findById({ _id: id })
 
@@ -153,27 +162,37 @@ const updateHora = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'No existe la orden' });
         }
 
-        const filter = dbOrder.listHd.find(p => p.hora === hora && p.fecha === fecha);
+        const newHoras: string[] = [];
 
-        if (filter) {
-            await db.disconnect();
-            return res.status(400).json({ message: 'Hora ya bloqueada' });
-        }
+        horas.forEach(da => {
+            const filter = dbOrder.listHd.some(p => p.hora.toString() === da.toString() && p.fecha.toString() === fecha.toString());
+            if (!filter) {
+                newHoras.push(da);
+            }
+        })
 
         const newDates = dbOrder.date;
-        const newCode = `${fecha}${hora}`.replace(/\s+/g, '')
 
-        newDates.push(newCode);
+        newHoras.forEach(h => {
+            const newCode = `${fecha}${h}`.replace(/\s+/g, '')
+            newDates.push(newCode);
+        })
 
         const newLisths = dbOrder.listHd;
 
-        const newListh = {
-            fecha,
-            hora,
-            servicio: 'Bloqueado'
-        }
+        newHoras.forEach(lh => {
+            const newListh = {
+                fecha,
+                hora: lh,
+                servicio: 'Bloqueado'
+            }
 
-        newLisths.push(newListh)
+            newLisths.push(newListh)
+
+        });
+
+
+        await db.checkConnection();
 
         await dbOrder.updateOne({
             date: newDates,

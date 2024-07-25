@@ -44,3 +44,18 @@ export const disconnect = async () => {
         console.log('eee')
     }
 }
+
+
+export const checkConnection = async () => {
+    if (mongoConnection.isConnected === 1) {
+        console.log('Already connected to MongoDB');
+        return;
+    }
+
+    await connect();
+    if (mongoConnection.isConnected === 1) {
+        console.log('Successfully connected to MongoDB');
+    } else {
+        console.log('Failed to connect to MongoDB');
+    }
+};

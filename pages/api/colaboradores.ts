@@ -98,7 +98,7 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const codigo = `${format(fechaSelect, 'EEEE d MMMM yyy', { locale: es })}`;
 
-        await db.connect();
+        await db.checkConnection();
 
         const colaboradores = await Colaborador.find({
             category: categoria,
@@ -114,42 +114,33 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 
             const exist = colaborador.listHd.filter(p => p.fecha === codigo);
 
+
             if (exist.length > 0) {
 
                 exist.map(da => {
 
-                    if (colaborador.morshift.length > 0) {
+                    colaborador.morshift.forEach(turno => {
+                        const newfillsd = exist.find(p => p.hora === turno.hour && p.fecha === codigo);
+                        if (!newfillsd) {
+                            if (!uniqueHours[turno.hour]) {
+                                uniqueHours[turno.hour] = true;
+                                result.push(turno);
+                            }
+                        }
+                    });
 
-                        const find = colaborador.date.find(a => a === `${codigo}${da.hora}`.replace(/\s/g, ""))
+                    if (!esSabado(`${data.selectedDate}`)) {
 
-                        if (!find) {
-                            colaborador.morshift.forEach(turno => {
+                        colaborador.aftshift.forEach(turno => {
+                            const newfillsd = exist.find(p => p.hora === turno.hour && p.fecha === codigo);
+                            if (!newfillsd) {
                                 if (!uniqueHours[turno.hour]) {
                                     uniqueHours[turno.hour] = true;
                                     result.push(turno);
                                 }
-                            });
-                        }
-                    }
-
-                    if (!esSabado(`${data.selectedDate}`)) {
-                        if (colaborador.aftshift.length > 0) {
-
-                            const find = colaborador.date.find(a => a === `${codigo}${da.hora}`.replace(/\s/g, ""))
-
-                            if (!find) {
-                                colaborador.aftshift.forEach(turno => {
-                                    if (!uniqueHours[turno.hour]) {
-                                        uniqueHours[turno.hour] = true;
-                                        result.push(turno);
-                                    }
-                                });
                             }
-                        }
-
+                        });
                     }
-
-
                 })
             } else {
                 colaborador.morshift.forEach(turno => {

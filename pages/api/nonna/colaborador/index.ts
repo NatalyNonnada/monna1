@@ -21,9 +21,10 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 
 
     try {
-        await db.connect();
 
-        const colaboradores = await Colaborador.find();
+        await db.checkConnection();
+
+        const colaboradores = await Colaborador.find().lean();
 
         await db.disconnect();
 
@@ -44,7 +45,7 @@ const createColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const { fullnames } = req.body as IColaborador;
 
-        await db.connect();
+        await db.checkConnection();
 
         const dbColaborador = await Colaborador.findOne({ fullnames });
 
@@ -54,6 +55,8 @@ const createColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const newColaborador = new Colaborador({ ...req.body, date: [], hour: '', service: '', listHd: [], state: true });
+
+        await db.checkConnection();
 
         await newColaborador.save();
 
