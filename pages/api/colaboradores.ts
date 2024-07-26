@@ -48,6 +48,21 @@ interface ICola {
     selectedDate: string | string[];
 }
 
+function convertTo24Hour(time: string): string {
+    const [timePart, modifier] = time.split(' ');
+    let [hours, minutes] = timePart.split(':').map(Number);
+
+    if (modifier === 'pm' && hours !== 12) {
+        hours += 12;
+    }
+    if (modifier === 'am' && hours === 12) {
+        hours = 0;
+    }
+
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+}
+
+
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     switch (req.method) {
@@ -157,6 +172,17 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             }
         });
 
+        const hourMap = new Map<string, string>();
+
+        result.forEach(obj => {
+            hourMap.set(obj.hour, convertTo24Hour(obj.hour));
+        });
+
+        result.sort((a, b) => {
+            const timeA = hourMap.get(a.hour)!;
+            const timeB = hourMap.get(b.hour)!;
+            return timeA.localeCompare(timeB);
+        });
 
         if (startOfDay(fechaSelect).toISOString() === startOfDay(mindata()).toISOString()) {
             const nowTime = mindata().getHours() * 60 + mindata().getMinutes();
