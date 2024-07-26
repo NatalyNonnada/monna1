@@ -22,7 +22,7 @@ const getOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const { id } = req.query;
 
-        await db.connect();
+        await db.checkConnection();
 
         const orden = await Order.findById({ _id: id }).populate('Servicio');
 
@@ -50,7 +50,7 @@ const deleteOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'El id de la orden no es válido' });
         }
 
-        await db.connect();
+        await db.checkConnection();
 
         const dbOrder = await Order.findById({ _id: id });
 
@@ -58,6 +58,7 @@ const deleteOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             await db.disconnect();
             return res.status(400).json({ message: 'No existe la orden' });
         }
+        await db.checkConnection();
 
         await dbOrder.deleteOne({ _id: id })
 

@@ -83,7 +83,12 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'La fecha es requerida' });
         }
 
+        if (!data.date) {
+            return res.status(400).json({ message: 'La fecha es requerida' });
+        }
+
         const fechaSelect = new Date(`${data.selectedDate}`);
+        const fechaCalend = new Date(`${data.date}`);
 
         const fechaLimite = new Date();
         fechaLimite.setDate(mindata().getDate() + 21);
@@ -96,7 +101,7 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'No estamos disponibles para estas fechas intenta con otras' });
         }
 
-        const codigo = `${format(fechaSelect, 'EEEE d MMMM yyy', { locale: es })}`;
+        const codigoCalen = `${format(fechaCalend, 'EEEE d MMMM yyy', { locale: es })}`;
 
         await db.checkConnection();
 
@@ -107,59 +112,51 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 
         await db.disconnect();
 
-        const uniqueHours: { [key: string]: boolean } = {};
+        const uniqueHours = new Set<string>();
         const result: IHour[] = [];
 
-        colaboradores.map(colaborador => {
+        colaboradores.forEach(colaborador => {
 
-            const exist = colaborador.listHd.filter(p => p.fecha === codigo);
-
+            const exist = colaborador.listHd.filter(p => p.fecha === codigoCalen);
 
             if (exist.length > 0) {
-
-                exist.map(da => {
-
-                    colaborador.morshift.forEach(turno => {
-                        const newfillsd = exist.find(p => p.hora === turno.hour && p.fecha === codigo);
-                        if (!newfillsd) {
-                            if (!uniqueHours[turno.hour]) {
-                                uniqueHours[turno.hour] = true;
-                                result.push(turno);
-                            }
-                        }
-                    });
-
-                    if (!esSabado(`${data.selectedDate}`)) {
-
-                        colaborador.aftshift.forEach(turno => {
-                            const newfillsd = exist.find(p => p.hora === turno.hour && p.fecha === codigo);
-                            if (!newfillsd) {
-                                if (!uniqueHours[turno.hour]) {
-                                    uniqueHours[turno.hour] = true;
-                                    result.push(turno);
-                                }
-                            }
-                        });
-                    }
-                })
-            } else {
+                const existSet = new Set(exist.map(e => e.hora));
                 colaborador.morshift.forEach(turno => {
-                    if (!uniqueHours[turno.hour]) {
-                        uniqueHours[turno.hour] = true;
+                    if (!existSet.has(turno.hour) && !uniqueHours.has(turno.hour)) {
+                        uniqueHours.add(turno.hour);
                         result.push(turno);
                     }
                 });
 
-                if (!esSabado(`${data.selectedDate}`)) {
+                const isSaturday = esSabado(`${data.date}`);
+                if (!isSaturday) {
                     colaborador.aftshift.forEach(turno => {
-                        if (!uniqueHours[turno.hour]) {
-                            uniqueHours[turno.hour] = true;
+                        if (!existSet.has(turno.hour) && !uniqueHours.has(turno.hour)) {
+                            uniqueHours.add(turno.hour);
+                            result.push(turno);
+                        }
+                    });
+                }
+            } else {
+                colaborador.morshift.forEach(turno => {
+                    if (!uniqueHours.has(turno.hour)) {
+                        uniqueHours.add(turno.hour);
+                        result.push(turno);
+                    }
+                });
+
+                const isSaturday = esSabado(`${data.date}`);
+                if (!isSaturday) {
+                    colaborador.aftshift.forEach(turno => {
+                        if (!uniqueHours.has(turno.hour)) {
+                            uniqueHours.add(turno.hour);
                             result.push(turno);
                         }
                     });
                 }
             }
         });
+
 
         if (startOfDay(fechaSelect).toISOString() === startOfDay(mindata()).toISOString()) {
             const nowTime = mindata().getHours() * 60 + mindata().getMinutes();

@@ -171,7 +171,7 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Reserva no valida' });
         }
 
-        await db.connect();
+        await db.checkConnection();
 
         const existOr = await Order.findById({ _id: id }).populate('Servicio').lean();
 
@@ -197,7 +197,7 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(201).json(newOrder);
         }
 
-        await db.connect();
+        await db.checkConnection();
 
         const existReser = await Reserva.findOne({ idServicio: id });
 

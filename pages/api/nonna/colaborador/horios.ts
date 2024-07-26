@@ -6,9 +6,16 @@ import { isValidObjectId } from 'mongoose';
 
 
 interface Infechas {
-    fecha: string,
-    horas: string[],
-    id: string
+    fecha: string;
+    horas: string[];
+    id: string;
+}
+
+interface ICola {
+    _id: string;
+    fullnames: string;
+    morshift: IHour[];
+    aftshift: IHour[];
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -43,7 +50,7 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Orden no válida' });
         }
 
-        await db.connect();
+        await db.checkConnection();
 
         const dbOrder = await Order.findOne({ _id: id }).populate('Servicio').lean();
 
@@ -56,6 +63,8 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             ...dbOrder.Servicio as unknown as Iservicio
         };
 
+        await db.checkConnection();
+
         const dbServicio = await Servicio.findOne({ _id: servicr._id?.toString() });
 
         if (!dbServicio) {
@@ -63,66 +72,43 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'No existe el Servicio' });
         }
 
+        await db.checkConnection();
+
         const colaboradores = await Colaborador.find({ category: dbServicio.category }).select('_id fullnames morshift aftshift date hour service listHd').lean();
 
         await db.disconnect();
 
+        const newColab: ICola[] = [];
 
+        colaboradores.forEach(colaborador => {
+            const exist = colaborador.listHd.filter(p => p.fecha === dbOrder.date);
 
+            if (exist.length > 0) {
+                const existSet = new Set(exist.map(e => e.hora));
+                const newListMor: IHour[] = colaborador.morshift.filter(turno => !existSet.has(turno.hour));
+                const newListAff: IHour[] = colaborador.aftshift.filter(turno => !existSet.has(turno.hour));
 
-        const colaboradoresFiltrados = colaboradores.map(colaborador => {
-
-            const newLish = colaborador.listHd.filter(a => a.fecha === dbOrder.date);
-
-            if (newLish.length > 0) {
-                const set: Set<string> = new Set(colaborador.date);
-
-                const newListMor: IHour[] = [];
-                const newListAff: IHour[] = [];
-
-                const newMorshift = colaborador.morshift.filter(p => p.hour !== dbOrder.hour);
-                const newaftshift = colaborador.aftshift.filter(p => p.hour !== dbOrder.hour);
-
-                newLish.forEach(da => {
-
-                    const checkAndPushShift = (shiftList: IHour[], newShiftList: IHour[], shiftType: string) => {
-                        const found: boolean = set.has(`${dbOrder.date}${da.hora}`.replace(/\s/g, ""));
-                        if (!found) {
-                            const findShift = shiftList.find(p => p.hour === dbOrder.hour);
-                            if (findShift) {
-                                console.log(`agrego ${shiftType}`);
-                                newShiftList.push(findShift);
-                            }
-                        }
-                    };
-
-                    if (newMorshift.length > 0) {
-                        checkAndPushShift(newMorshift, newListMor, '1');
-                    }
-
-                    if (newaftshift.length > 0) {
-                        checkAndPushShift(newaftshift, newListAff, '2');
-                    }
-                });
-
-                return {
+                const newColaFill: ICola = {
                     _id: colaborador._id.toString(),
                     fullnames: colaborador.fullnames,
                     morshift: newListMor,
-                    aftshift: newListAff
+                    aftshift: newListAff,
                 };
+
+                newColab.push(newColaFill);
             } else {
-                return {
+                const newColaFill: ICola = {
                     _id: colaborador._id.toString(),
                     fullnames: colaborador.fullnames,
                     morshift: colaborador.morshift,
-                    aftshift: colaborador.aftshift
+                    aftshift: colaborador.aftshift,
                 };
+
+                newColab.push(newColaFill);
             }
         });
 
-        res.status(200).json(colaboradoresFiltrados.filter(a => a !== undefined));
-        // res.status(200).json(colaboradores.filter(a => a !== undefined));
+        res.status(200).json(newColab.filter(a => a !== undefined));
 
     } catch (error) {
         console.log(error);
@@ -232,7 +218,7 @@ const deleteHora = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'La hora no es valida' });
         }
 
-        await db.connect();
+        await db.checkConnection();
 
         const dbOrder = await Colaborador.findById({ _id: id })
 
@@ -247,6 +233,8 @@ const deleteHora = async (req: NextApiRequest, res: NextApiResponse) => {
         const newCode = `${fillcode?.fecha}${fillcode?.hora}`.replace(/\s+/g, '');
 
         const newDates = dbOrder.date.filter(p => p !== newCode);
+
+        await db.checkConnection();
 
         await dbOrder.updateOne({
             date: newDates,
@@ -278,7 +266,7 @@ const addHora = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'El colaborador no  es válido' });
         }
 
-        await db.connect();
+        await db.checkConnection();
 
         const existeHour = await Colaborador.findOne({
             _id: id,
@@ -294,6 +282,9 @@ const addHora = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const simb = `${hora}`.includes('pm')
+
+        await db.checkConnection();
+
         const cola = await Colaborador.findById({ _id: id });
 
         if (simb) {

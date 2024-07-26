@@ -48,8 +48,6 @@ export const SelectDate = ({ total, date, hour = {
     const [controlDay, setcontrolDay] = useState(0);
     const [fillter, setFillter] = useState<IHour[]>([]);
 
-    console.log(today)
-
     const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 0 });
 
     const daysOfWeek = Array.from({ length: 7 }).map((_, index) =>

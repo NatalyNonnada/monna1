@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Box, Button, Card, CardContent, Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
-import { IReserva } from '../../../interface';
+import { Box, Button, Card, CardContent, Divider, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { IReserva, Iservicio } from '../../../interface';
 import { initFecha, listPages, priceBodyTemplate, validations } from '../../../utils';
 import { useReserva, useVenta } from '../../../hooks';
 import { LoadingCircular } from '../../../components/ui';
@@ -9,6 +9,7 @@ import { SaleContext } from '../../../context';
 import { IColaborador } from '../../../interface/IColaborador';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { Add } from '@mui/icons-material';
 
 interface Props { reserva: IReserva; }
 
@@ -48,13 +49,15 @@ export const DetailReserva = ({ reserva }: Props) => {
     const { fullnames, _id: cola } = { ...colaborador as IColaborador }
     const { phone, lastName, firstName } = { ...shoppingAddress }
 
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const [adicional, setAdicionales] = useState<Iservicio[]>([])
     const { register, handleSubmit, formState: { errors } } = useForm<datar>({ defaultValues: { ...black } });
     const { addSaleToCart, addSaleLoaded, clearVenta, ventas, total: subTotal } = useContext(SaleContext);
-    const { confiReserva } = useReserva();
+    const { confiReserva, getAdicionales } = useReserva();
     const { saveVenta } = useVenta();
 
     const handleConfi = async (data: datar) => {
+        //add carrito y confirma
         setLoading(true)
         const { hasError } = await confiReserva({ ...data, id: _id || '' });
 
@@ -137,19 +140,34 @@ export const DetailReserva = ({ reserva }: Props) => {
     }
 
     const handleFin = async () => {
-        setLoading(true);
-        const { hasError } = await saveVenta({
-            colaboradora: fullnames,
-            fecha: initFecha.mindataFor(),
-            celular: phone || '',
-            total: subTotal,
-            servicios: ventas as Items[]
-        })
 
-        if (hasError) {
-            generatePDF();
+        if (subTotal > 0) {
+
+            setLoading(true);
+
+            const { hasError } = await saveVenta({
+                colaboradora: fullnames,
+                fecha: initFecha.mindataFor(),
+                celular: phone || '',
+                total: subTotal,
+                servicios: ventas as Items[]
+            })
+
+            if (hasError) {
+                generatePDF();
+            }
         }
     }
+
+    useEffect(() => {
+
+        const cargarAdici = async () => {
+            const { adicionales } = await getAdicionales();
+            setAdicionales(adicionales)
+        }
+        cargarAdici();
+    }, [])
+
 
     return (
         <>
@@ -157,6 +175,7 @@ export const DetailReserva = ({ reserva }: Props) => {
                 <Grid item xs={6} sm={6} md={6} lg={6}>
                     <Card className='card-servicio-iten'>
                         <CardContent>
+
                             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                 <Typography>{fullnames}</Typography>
                                 <Typography>{servicio} - {priceBodyTemplate({ price: `${total}` })}</Typography>
@@ -247,6 +266,9 @@ export const DetailReserva = ({ reserva }: Props) => {
                 <Grid item xs={6} sm={6} md={6} lg={6}>
                     <Card>
                         <CardContent>
+                            <IconButton>
+                                Agregar un adicional  <Add />
+                            </IconButton>
                             <div id="receipt-content" style={{ maxWidth: '600px', margin: '0px auto' }}>
                                 <div style={{ padding: '20px' }}>
                                     <h1>MONNA</h1>
@@ -269,12 +291,20 @@ export const DetailReserva = ({ reserva }: Props) => {
                                 </div>
                             </div>
                             <Typography component='div' sx={{ display: 'flex', justifyContent: 'center' }}>
-                                <Button variant='contained' color='success' onClick={handleFin}>Finalizar servicio</Button>
+                                <Button
+                                    variant='contained'
+                                    color='success'
+                                    onClick={handleFin}
+                                    disabled={subTotal <= 0}
+                                >
+                                    Finalizar servicio
+                                </Button>
                             </Typography>
                         </CardContent>
                     </Card>
                 </Grid>
             </Grid>
+
             <LoadingCircular loading={loading} />
         </>
     )

@@ -32,32 +32,6 @@ export const SaleProvider: FC<Props> = ({ children }) => {
     const [state, dispatch] = useReducer(saleReducer, SALE_INITIAL_STATE);
 
     useEffect(() => {
-
-        // const jsonArray = Cookie.get('carrito-ventas');
-        // const arrayDeObjetos = jsonArray ? JSON.parse(jsonArray) : [];
-
-        // const lisVen = arrayDeObjetos as IVenta[];
-
-        // const existser = lisVen.some(event => event?._id === state.venta?._id);
-
-        // if (!existser) {
-        //     if (!state.venta) return;
-        //     const newList: IVenta[] = [...lisVen, { ...state.venta }];
-        //     const jsonArray = JSON.stringify(newList);
-        //     Cookie.set('carrito-ventas', jsonArray, {
-        //         expires: 1,
-        //         sameSite: 'strict'
-        //     });
-
-        //     const fillVen = newList.filter(p => p?.celular === state.venta?.celular && p?.fecha === initFecha.mindataFor());
-
-        //     dispatch({ type: '[Sale] - Set ventas', payload: fillVen || [] })
-        //     return;
-        // }
-
-    }, [state.venta])
-
-    useEffect(() => {
         const total = state.ventas.reduce((prev, current) => current.total + prev, 0);
         dispatch({ type: '[Sale] - Set total', payload: total });
     }, [state.ventas]);

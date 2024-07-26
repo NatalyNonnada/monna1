@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '../../../../database';
-import { Colaborador, Reserva, Venta } from '../../../../model';
+import { Colaborador, Reserva, Servicio, Venta } from '../../../../model';
 import { isValidObjectId } from 'mongoose';
 import { ISalef } from '../../../../interface';
 
@@ -117,7 +117,7 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Faltan servicios' });
         }
 
-        await db.connect()
+        await db.checkConnection()
 
         servicios.map(async da => {
             const cod = `${da.codigo}${da.hora}`.replace(/\s+/g, '')

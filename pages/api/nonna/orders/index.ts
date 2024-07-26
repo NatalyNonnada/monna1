@@ -78,7 +78,7 @@ const updateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 const deleteOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
 
-        await db.connect();
+        await db.checkConnection();
 
         const _id = (req.query.id as string) || '';
 
@@ -88,6 +88,8 @@ const deleteOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             await db.disconnect();
             return res.status(400).json({ message: 'No existe el Order' });
         }
+
+        await db.checkConnection();
 
         await dbOrder.deleteOne({ _id })
 

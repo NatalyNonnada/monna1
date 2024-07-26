@@ -31,7 +31,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 const getVenta = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
 
-        await db.connect();
+        await db.checkConnection();
 
         const reservas = await Venta.find();
 
@@ -80,6 +80,8 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Número de reserva no válido' });
         }
 
+        await db.checkConnection();
+
         //verificamos si existe la orden
         const dbOrden = await Order.findById({ _id: orden }).populate('Servicio').lean();
 
@@ -92,7 +94,7 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
             ...dbOrden.Servicio as unknown as Iservicio
         };
 
-        await db.connect();
+        await db.checkConnection();
         //verificamos si existe el servicio solicitado
         const dbServicio = await Servicio.findById({ _id: servicr._id?.toString() });
         if (!dbServicio) {
@@ -106,6 +108,7 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: `Para confirmar la reserva el monto tiene que ser igual o mayor a S/${dbServicio.reser}` });
         }
 
+        await db.checkConnection();
         //verificamos si existe el colaborador solicitado
         const dbColaborador = await Colaborador.findById({ _id: colaborador });
         if (!dbColaborador) {
@@ -133,6 +136,7 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'El colaborador esta ocupada para la hora y fecha' });
         }
 
+        await db.checkConnection();
         //verficamos si el numero de operacion existe
         if (nureserva !== 0) {
             const dbReserva = await Reserva.findOne({ nureserva: nureserva });
@@ -178,6 +182,8 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
             cafinal: controlPa,
             finPago: controlTip,
         })
+
+        await db.checkConnection();
 
         await newReserva.save();
 

@@ -42,7 +42,7 @@ const CheckoutPage: NextPage = () => {
             <p class="alert-title"> <strong>YAPE ó PLIN al 📲993 759 147 </strong></p>
             <p class="alert-title">Transferencia bancaria BCP ahorros <strong>245-91016425-0-08</strong></p>
             <p class="alert-title">Todo a nombre de: <strong>NATALY ARACELLI CERQUIN PEÑA</strong></p>
-            <p class="alert-title"><strong>Enviar voucher o pantallazo al whatsapp</strong></p>
+            <p class="alert-title"><strong>Enviar pantallazo del abono al whatsapp</strong></p>
             `,
             confirmButtonText: "Confirmar"
         }).then(async (result) => {
@@ -62,7 +62,7 @@ const CheckoutPage: NextPage = () => {
                         icon: "error",
                         title: "Oops...",
                         text: `Ocurrio un error! ${message}`,
-                        footer: '<a href="#">Reportar?</a>'
+                        footer: '<a href="http://wa.me/51993759147?"  target="_blank">Reportar?</a>'
                     });
                 }
             }

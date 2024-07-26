@@ -31,7 +31,7 @@ const getServicio = async (req: NextApiRequest, res: NextApiResponse) => {
 
 
     try {
-        await db.connect();
+        await db.checkConnection();
 
         const Servicios = await Servicio.find().lean();
 
@@ -58,7 +58,7 @@ const updateServicio = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'El servicio no es valido' });
         }
 
-        await db.connect();
+        await db.checkConnection();
 
         const dbServicio = await Servicio.findById({ _id });
 
@@ -71,6 +71,8 @@ const updateServicio = async (req: NextApiRequest, res: NextApiResponse) => {
             await db.disconnect();
             return res.status(400).json({ message: 'Categoria no valida' });
         }
+
+        await db.checkConnection();
 
         await dbServicio.updateOne({ title, price, reser, description, category, estado })
         await db.disconnect();

@@ -50,7 +50,7 @@ export const DetailOrder = ({ codigo }: Props) => {
                                                 <p style={{ textAlign: 'center' }}>🏷️Transferencia bancaria BCP ahorros <strong>245-91016425-0-08.</strong></p>
                                                 <p style={{ textAlign: 'center' }}>Todo a nombre de: <strong>NATALY ARACELLI CERQUIN PEÑA</strong></p>
                                                 <p style={{ textAlign: 'center' }}>
-                                                    Enviar voucher o pantallazo
+                                                    Enviar pantallazo del abono al whatsapp
                                                     <Link href="http://wa.me/51993759147?" target='_blank'>
                                                         <IconButton>
                                                             <Badge>

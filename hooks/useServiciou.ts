@@ -12,7 +12,7 @@ export const useServiciou = () => {
 
     const { listService, isLoaded, setService, setLoading } = useContext(NonnaContext);
     const [listaData, setListaData] = useState<IHour[]>([]);
-    const { cart, selectedDate } = useContext(CartContext);
+    const { cart, selectedDate, calenDate } = useContext(CartContext);
     const router = useRouter();
 
     const getServicios = async () => {
@@ -64,7 +64,7 @@ export const useServiciou = () => {
             setLoading(true);
 
             const { data } = await tesloApi({
-                url: `/colaboradores/?categoria=${cart?.category}&selectedDate=${selectedDate}`,
+                url: `/colaboradores/?categoria=${cart?.category}&selectedDate=${selectedDate}&date=${calenDate}`,
                 method: 'GET'
             });
 

@@ -89,7 +89,7 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Número de reserva no válido' });
         }
 
-        await db.connect();
+        await db.checkConnection();
 
         //verificamos si existe la orden
         const dbOrden = await Order.findById({ _id: orden }).populate('Servicio').lean();
@@ -103,6 +103,8 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
             ...dbOrden.Servicio as unknown as Iservicio
         };
 
+        await db.checkConnection();
+
         const dbServicio = await Servicio.findById({ _id: servicr._id?.toString() });
 
         if (!dbServicio) {
@@ -114,6 +116,8 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
             await db.disconnect();
             return res.status(400).json({ message: `Para confirmar la reserva el monto tiene que ser igual o mayor a S/${dbServicio.reser}` });
         }
+
+        await db.checkConnection();
 
         const dbColaborador = await Colaborador.findById({ _id: colaborador });
         if (!dbColaborador) {
@@ -141,6 +145,7 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'El colaborador esta ocupada para la hora y fecha' });
         }
 
+        await db.checkConnection();
         //verficamos si el numero de operacion existe
         if (nureserva !== 0) {
             const dbReserva = await Reserva.findOne({ nureserva: nureserva });
@@ -187,6 +192,8 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
             finPago: controlTip,
         })
 
+        await db.checkConnection();
+
         await newReserva.save();
 
         //una ves registrado
@@ -203,6 +210,8 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
 
         let newDateHo = dbColaborador.listHd;
         newDateHo.push({ fecha: `${dbOrden.date}`, hora: `${existTma?.hour || existTta?.hour}`, servicio: dbServicio.title })
+
+        await db.checkConnection();
 
         const cola = await Colaborador.findById({ _id: colaborador });
 

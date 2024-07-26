@@ -64,7 +64,7 @@ const updateServicios = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
 
-        await db.connect();
+        await db.checkConnection();
 
         const dbOrder = await Colaborador.findById({ _id: id })
 
@@ -72,6 +72,8 @@ const updateServicios = async (req: NextApiRequest, res: NextApiResponse) => {
             await db.disconnect();
             return res.status(400).json({ message: 'No existe el colaborador' });
         }
+
+        await db.checkConnection();
 
         await dbOrder.updateOne({
             category: lstservicios

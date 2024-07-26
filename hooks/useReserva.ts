@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { tesloApi } from '../api';
-import { IReserva } from '../interface';
+import { IReserva, Iservicio } from '../interface';
 import { errorAlert } from '../alerts';
 import { useRouter } from 'next/router';
 
@@ -60,7 +60,7 @@ export const useReserva = () => {
 
             reload();
 
-            return { hasError: false }
+            return { hasError: true }
 
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -82,8 +82,41 @@ export const useReserva = () => {
         }
     }
 
+    const getAdicionales = async (): Promise<{ hasError: boolean, adicionales: Iservicio[] }> => {
+        try {
+
+            const { data } = await tesloApi({
+                url: '/nonna/seradicionales',
+                method: 'GET'
+            });
+
+            const adicionales = data as Iservicio[];
+
+            return { hasError: false, adicionales }
+
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                if (error.response) {
+                    const { message } = error.response.data as controlErr;
+                    errorAlert(message);
+                    return { hasError: true, adicionales: [] }
+                } else if (error.request) {
+                    errorAlert('La solicitud fue hecha pero no se recibió respuesta, contacte con CinCout');
+                    return { hasError: true, adicionales: [] }
+                } else {
+                    errorAlert('Ocurrió un error al configurar la solicitud, contacte con CinCout');
+                    return { hasError: true, adicionales: [] }
+                }
+            } else {
+                errorAlert('Ocurrió un error, contacte con CinCout');
+                return { hasError: true, adicionales: [] }
+            }
+        }
+    }
+
     return {
         getReservas,
-        confiReserva
+        confiReserva,
+        getAdicionales
     }
 }
