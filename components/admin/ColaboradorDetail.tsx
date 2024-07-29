@@ -35,7 +35,6 @@ interface hors {
   _id?: string;
 }
 
-
 export const ColaboradorDetail = ({ colaborador }: Props) => {
 
   const { register, handleSubmit, reset, getValues, setValue, formState: { errors } } = useForm<nfechas>({ defaultValues: { ...blackData } });

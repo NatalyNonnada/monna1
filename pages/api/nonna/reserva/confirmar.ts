@@ -120,31 +120,31 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         await db.checkConnection()
 
         servicios.map(async da => {
-            const cod = `${da.codigo}${da.hora}`.replace(/\s+/g, '')
-            const cola = await Colaborador.findById({ _id: da.cola }).select('_id fullnames date listHd');
 
-            if (cola) {
+            if (da.codigo !== '-') {
 
-                const newHd = cola.listHd.filter(p => !(p.fecha.toString() === da.codigo && p.hora.toString() === da.hora.toString()))
-                const newDate = cola.date.filter(p => p !== cod);
+                const cod = `${da.codigo}${da.hora}`.replace(/\s+/g, '')
+                const cola = await Colaborador.findById({ _id: da.cola }).select('_id fullnames date listHd');
 
-                // Actualizar
-                await cola.updateOne({
-                    listHd: newHd,
-                    date: newDate
-                })
+                if (cola) {
 
-                //eliminar reserva
-                await Reserva.deleteOne({ _id: da._id })
+                    const newHd = cola.listHd.filter(p => !(p.fecha.toString() === da.codigo && p.hora.toString() === da.hora.toString()))
+                    const newDate = cola.date.filter(p => p !== cod);
+
+                    // Actualizar
+                    await cola.updateOne({
+                        listHd: newHd,
+                        date: newDate
+                    })
+
+                    //eliminar reserva
+                    await Reserva.deleteOne({ _id: da._id })
+
+                }
             }
-
         })
 
-        const newVenta = new Venta({
-            ...req.body
-        })
-
-        await newVenta.save();
+        await db.disconnect();
 
         res.status(200).json({ message: 'ok' });
 

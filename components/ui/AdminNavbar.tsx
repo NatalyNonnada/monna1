@@ -73,7 +73,6 @@ export const AdminNavbar = () => {
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size="large"
-                            // onClick={toogleSideMenu}
                             aria-label="account of current user"
                             aria-controls="menu-appbar"
                             aria-haspopup="true"
@@ -103,7 +102,6 @@ export const AdminNavbar = () => {
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {listPages.navbarp.map((page) => (
                             <Button
-                                // color={asPath === '/admin/habitaciones/detail' ? 'primary' : 'info'}
                                 key={page.name}
                                 onClick={() => handleHref(page.ruta)}
                                 sx={{ my: 2, display: 'block' }}

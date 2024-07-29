@@ -18,7 +18,7 @@ const getServicio = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         await db.checkConnection();
 
-        const Servicios = await Servicio.find({ category: 'Adicionales' }).lean();
+        const Servicios = await Servicio.find({ category: 'Adicionales' }).select('_id price title category').lean();
 
         await db.disconnect();
 

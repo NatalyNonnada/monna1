@@ -1,57 +1,93 @@
+import { Button, Card, CardContent, Checkbox, FormControlLabel, Modal, Typography } from '@mui/material';
+import { priceBodyTemplate } from '../../../utils';
+import { styleCardReserva } from '../styleCardReserva';
+import { useState } from 'react';
+import { ItemCounter } from '../../../components';
 
-import { Card, CardContent, Checkbox, FormControlLabel, Modal, Typography } from '@mui/material';
-import { styleCard } from '../styleCard';
-import { Iservicio, IVenta } from '../../../interface';
-import { useForm } from 'react-hook-form';
-import { priceBodyTemplate } from '@/utils';
+interface Item {
+    _id?: string;
+    cola: string;
+    fecha: string;
+    hora: string;
+    codigo: string;
+    celular: string;
+    quanty: number;
+    servicio: string;
+    total: number;
+}
 
 interface Props {
     open: boolean;
-    adicional: Iservicio[];
+    adicional: Item[];
     handleClose: () => void;
-    addAdicional: (horas: Iservicio) => void;
+    addAdicional: (servicio: Item[]) => void;
 }
-
-interface newHor { id: string, hora: string }
-const formdata: newHor = { id: '', hora: '' }
-
 
 export const ModalAdicional = ({ open, adicional, handleClose, addAdicional }: Props) => {
 
-    const ventasSelc: Iservicio[] = [];
+    const [newListArr, setNewListArr] = useState<Item[]>([]);
 
-    const onChangeSize = (size: Iservicio) => {
-        const currentSizes = ventasSelc
-        // if (currentSizes.includes(size)) {
-        //   return setValue('horas', currentSizes.filter(s => s !== size), { shouldValidate: true });
-        // }
+    const onChangeSize = (size: Item) => {
+        size.quanty = 1;
 
-        // setValue('horas', [...currentSizes, size], { shouldValidate: true });
-        ventasSelc.push(size)
+        if (newListArr.some(p => p._id === size._id)) {
+            return setNewListArr([...newListArr.filter(s => s._id !== size._id)])
+        }
 
+        setNewListArr([...newListArr, size])
+    }
+
+    const updatedQuantity = (size: Item, newQuantityValue: number) => {
+        size.quanty = newQuantityValue;
+        setNewListArr(newListArr.map(product => {
+            if (product._id !== size._id) return product;
+            return size;
+        }))
+    }
+
+    const handleCloseMo = () => {
+        handleClose();
+        setNewListArr([])
+    }
+
+    const handleAdd = () => {
+        setNewListArr([])
+        addAdicional(newListArr);
     }
 
     return (
         <Modal
             open={open}
-            onClose={handleClose}
+            onClose={handleCloseMo}
             aria-labelledby="parent-modal-title"
             aria-describedby="parent-modal-description"
         >
-            <Card sx={{ ...styleCard }}>
+            <Card sx={{ ...styleCardReserva }}>
                 <CardContent>
                     {
                         adicional.map(size => (
-
-                            <FormControlLabel
-                                key={size._id}
-                                control={<Checkbox checked={ventasSelc.includes(size)} />}
-                                label={`${size.title} - ${priceBodyTemplate({ price: `${size.price}` })}`}
-                                onChange={() => onChangeSize(size)}
-                            />
+                            <div key={size._id}>
+                                <FormControlLabel
+                                    control={<Checkbox checked={newListArr.some(p => p._id?.toString() === size._id?.toString())} />}
+                                    label={`${size.servicio} - ${priceBodyTemplate({ price: `${size.total}` })}`}
+                                    onChange={() => onChangeSize(size)}
+                                />
+                                {
+                                    newListArr.some(p => p._id?.toString() === size._id?.toString()) && (
+                                        <ItemCounter
+                                            currentValue={size.quanty}
+                                            updatedQuantity={(value) => updatedQuantity(size, value)}
+                                            stock={10}
+                                            acstokc={false}
+                                        />
+                                    )
+                                }
+                            </div>
                         ))
                     }
-
+                    <Typography component='div' textAlign='center'>
+                        <Button onClick={handleAdd} size='large' color='primary'>Agregar</Button>
+                    </Typography>
                 </CardContent>
             </Card>
         </Modal>

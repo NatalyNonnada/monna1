@@ -7,3 +7,4 @@ export * from './BusquedaIten';
 export * from './Tiptap';
 export * from './RenderContent';
 export * from './ContentWithToggle';
+export * from './ItemCounter';

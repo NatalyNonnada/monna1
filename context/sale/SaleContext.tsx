@@ -15,6 +15,7 @@ interface ContextProps {
     clearVenta: () => void;
     addSaleToCart: (sale: IVenta) => void;
     addSaleLoaded: (lo: load) => void;
+    addAdicionales: (adicionales: IVenta[]) => void;
     ChangeLoaded: (change: boolean) => void;
 }
 

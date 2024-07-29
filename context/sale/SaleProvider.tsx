@@ -32,7 +32,7 @@ export const SaleProvider: FC<Props> = ({ children }) => {
     const [state, dispatch] = useReducer(saleReducer, SALE_INITIAL_STATE);
 
     useEffect(() => {
-        const total = state.ventas.reduce((prev, current) => current.total + prev, 0);
+        const total = state.ventas.reduce((prev, current) => (current.total * current.quanty) + prev, 0);
         dispatch({ type: '[Sale] - Set total', payload: total });
     }, [state.ventas]);
 
@@ -85,6 +85,29 @@ export const SaleProvider: FC<Props> = ({ children }) => {
 
     }
 
+    const addAdicionales = (adicionales: IVenta[]) => {
+
+        let newList: IVenta[] = [...state.ventas];
+
+        adicionales.map(adi => {
+            const existser = state.ventas.find(event => event?._id === adi._id);
+            if (!existser) {
+                newList.push(adi)
+            } else {
+                newList = newList.filter(product => !(product._id === adi._id));
+                newList.push({ ...existser, quanty: existser.quanty + adi.quanty })
+            }
+        })
+
+        const jsonArray = JSON.stringify(newList);
+        Cookie.set('carrito-ventas', jsonArray, {
+            expires: 1,
+            sameSite: 'strict'
+        });
+
+        dispatch({ type: '[Sale] - Set ventas', payload: newList })
+    }
+
     return (
         <SaleContext.Provider value={{
             ...state,
@@ -93,6 +116,7 @@ export const SaleProvider: FC<Props> = ({ children }) => {
             addSaleToCart,
             ChangeLoaded,
             addSaleLoaded,
+            addAdicionales
         }}>
             {children}
         </SaleContext.Provider>

@@ -10,6 +10,8 @@ import { IColaborador } from '../../../interface/IColaborador';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Add } from '@mui/icons-material';
+import { ModalAdicional } from '../servicios';
+import { TableSale } from './TableSale';
 
 interface Props { reserva: IReserva; }
 
@@ -30,16 +32,13 @@ const black: datar = {
 interface Items {
     _id?: string;
     cola: string;
+    fecha: string;
     hora: string;
     codigo: string;
+    celular: string;
     servicio: string;
-    tipagou: string;
-    nrpagou: Number;
-    topagou: number;
-
-    tipagod: string;
-    nrpagod: Number;
-    topagod: number;
+    total: number;
+    quanty: number;
 }
 
 export const DetailReserva = ({ reserva }: Props) => {
@@ -50,9 +49,11 @@ export const DetailReserva = ({ reserva }: Props) => {
     const { phone, lastName, firstName } = { ...shoppingAddress }
 
     const [loading, setLoading] = useState(false);
-    const [adicional, setAdicionales] = useState<Iservicio[]>([])
+    const [adicional, setAdicionales] = useState<Iservicio[]>([]);
+    const [listItem, setListItem] = useState<Items[]>([]);
+    const [open, setOpen] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm<datar>({ defaultValues: { ...black } });
-    const { addSaleToCart, addSaleLoaded, clearVenta, ventas, total: subTotal } = useContext(SaleContext);
+    const { addSaleToCart, addAdicionales, addSaleLoaded, clearVenta, ventas, total: subTotal } = useContext(SaleContext);
     const { confiReserva, getAdicionales } = useReserva();
     const { saveVenta } = useVenta();
 
@@ -65,45 +66,28 @@ export const DetailReserva = ({ reserva }: Props) => {
 
         addSaleToCart({
             _id: _id || '',
-            colaboradora: fullnames,
             cola: cola || '',
             fecha: `${initFecha.mindataFor()}`,
             hora: hour,
             codigo: fecha,
+            quanty: 1,
             celular: `${phone}`,
             servicio: servicio,
             total: total,
-
-            tipagou: iniPago,
-            nrpagou: nureserva,
-            topagou: careserva,
-
-            tipagod: finPago,
-            nrpagod: nufinal,
-            topagod: cafinal,
         })
-
     }
 
     const handleConfir = () => {
         addSaleToCart({
             _id: _id || '',
-            colaboradora: fullnames,
             cola: cola || '',
             fecha: `${initFecha.mindataFor()}`,
             hora: hour,
             codigo: fecha,
+            quanty: 1,
             celular: `${phone}`,
             servicio: servicio,
             total: total,
-
-            tipagou: iniPago,
-            nrpagou: nureserva,
-            topagou: careserva,
-
-            tipagod: finPago,
-            nrpagod: nufinal,
-            topagod: cafinal,
         })
     }
 
@@ -113,6 +97,9 @@ export const DetailReserva = ({ reserva }: Props) => {
 
     const generatePDF = async () => {
         const element = document.getElementById('receipt-content');
+        const fechacon = document.getElementById('fecha-content') as HTMLElement;
+        fechacon.style.marginTop = "110px";
+
         if (element) {
             const canvas = await html2canvas(element, { scale: 4 });
             const imgData = canvas.toDataURL('image/png');
@@ -131,11 +118,17 @@ export const DetailReserva = ({ reserva }: Props) => {
             const logoImg = new Image();
             logoImg.src = logoUrl;
             logoImg.onload = () => {
-                pdf.addImage(logoImg, 'PNG', 27, 1, 50, 15);
-                pdf.save('receipt.pdf');
+                pdf.addImage(logoImg, 'PNG', 15, 1, 50, 15);
+                const pdfBlob = pdf.output('blob');
+                const blobUrl = URL.createObjectURL(pdfBlob);
+                const newWindow = window.open(blobUrl, '_blank');
 
+                if (newWindow) {
+                    newWindow.addEventListener('load', () => {
+                        newWindow.print();
+                    });
+                }
             };
-            clearVenta();
         }
     }
 
@@ -146,10 +139,6 @@ export const DetailReserva = ({ reserva }: Props) => {
             setLoading(true);
 
             const { hasError } = await saveVenta({
-                colaboradora: fullnames,
-                fecha: initFecha.mindataFor(),
-                celular: phone || '',
-                total: subTotal,
                 servicios: ventas as Items[]
             })
 
@@ -163,19 +152,46 @@ export const DetailReserva = ({ reserva }: Props) => {
 
         const cargarAdici = async () => {
             const { adicionales } = await getAdicionales();
-            setAdicionales(adicionales)
+            setAdicionales(adicionales);
         }
         cargarAdici();
     }, [])
 
+    const handleClose = () => setOpen(false);
+
+    const addAdicional = (ser: Items[]) => {
+        setOpen(false);
+        addAdicionales(ser);
+    }
+
+    useEffect(() => {
+
+        if (adicional.length > 0) {
+            adicional.map(item => {
+                const existser = listItem.some(event => event._id === item._id);
+                if (!existser) {
+                    listItem.push({
+                        _id: item._id,
+                        cola: '-',
+                        fecha: '-',
+                        hora: '-',
+                        codigo: '-',
+                        celular: phone || '',
+                        servicio: item.title,
+                        total: item.price,
+                        quanty: 1
+                    });
+                }
+            });
+        }
+    }, [adicional]);
 
     return (
         <>
             <Grid container spacing={2}>
-                <Grid item xs={6} sm={6} md={6} lg={6}>
+                <Grid item xs={12} sm={12} md={4} lg={4}>
                     <Card className='card-servicio-iten'>
                         <CardContent>
-
                             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                 <Typography>{fullnames}</Typography>
                                 <Typography>{servicio} - {priceBodyTemplate({ price: `${total}` })}</Typography>
@@ -263,39 +279,24 @@ export const DetailReserva = ({ reserva }: Props) => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={6} sm={6} md={6} lg={6}>
+                <Grid item xs={12} sm={12} md={8} lg={8}>
                     <Card>
                         <CardContent>
-                            <IconButton>
-                                Agregar un adicional  <Add />
-                            </IconButton>
+                            <IconButton onClick={() => setOpen(true)}>Agregar un adicional<Add /></IconButton>
                             <div id="receipt-content" style={{ maxWidth: '600px', margin: '0px auto' }}>
                                 <div style={{ padding: '20px' }}>
-                                    <h1>MONNA</h1>
-                                    <p>Fecha: {initFecha.mindataFor()}</p>
+                                    <p id='fecha-content'>Fecha: {initFecha.mindataFor()}</p>
                                     <p>Nombre del Cliente: {`${firstName} ${lastName}`}</p>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #000', padding: '8px 0' }}>
-                                        <span style={{ fontWeight: 'bold' }}>Descripción</span>
-                                        <span style={{ fontWeight: 'bold' }}>Precio</span>
-                                    </div>
-                                    {ventas.map((item, index) => (
-                                        <div key={index} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #ccc', padding: '8px 0' }}>
-                                            <span>{item.servicio}</span>
-                                            <span>{priceBodyTemplate({ price: `${item.total}` })}</span>
-                                        </div>
-                                    ))}
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px', fontWeight: 'bold' }}>
-                                        <span>Total:</span>
-                                        <span>{priceBodyTemplate({ price: `${subTotal}` })}</span>
-                                    </div>
+                                    <TableSale ventas={ventas} subTotal={subTotal} />
                                 </div>
                             </div>
+                            <br />
                             <Typography component='div' sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Button
                                     variant='contained'
                                     color='success'
                                     onClick={handleFin}
-                                    disabled={subTotal <= 0}
+                                    disabled={!isPaid}
                                 >
                                     Finalizar servicio
                                 </Button>
@@ -304,7 +305,7 @@ export const DetailReserva = ({ reserva }: Props) => {
                     </Card>
                 </Grid>
             </Grid>
-
+            <ModalAdicional open={open} adicional={listItem} handleClose={handleClose} addAdicional={addAdicional} />
             <LoadingCircular loading={loading} />
         </>
     )
