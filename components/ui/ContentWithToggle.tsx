@@ -33,7 +33,7 @@ export const ContentWithToggle: FC<ContentWithToggleProps> = ({ content, initial
     return (
         <>
             <div>{isExpanded ? <RenderContent content={content} /> : <p>{displayedText}</p>}</div>
-            <Button onClick={toggleText} size="small">{isExpanded ? 'Mostrar menos' : 'Más informacion'}</Button>
+            <Button onClick={toggleText} size="small">{isExpanded ? 'Mostrar menos' : 'Más información'}</Button>
         </>
     );
 };

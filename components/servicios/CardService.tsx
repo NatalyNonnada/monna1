@@ -19,7 +19,9 @@ export const CardService = ({ data, handleSelect }: Props) => {
     const handleSelectService = () => {
         handleSelect();
         addDetail(data);
-        router.push('/fecha');
+        setTimeout(() => {
+            router.push('/fecha');
+        }, 900);
     }
 
     return (

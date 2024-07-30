@@ -98,7 +98,12 @@ export const DetailReserva = ({ reserva }: Props) => {
     const generatePDF = async () => {
         const element = document.getElementById('receipt-content');
         const fechacon = document.getElementById('fecha-content') as HTMLElement;
-        fechacon.style.marginTop = "110px";
+        const titleCell = document.getElementsByClassName('tablefon') as HTMLCollectionOf<HTMLElement>;
+
+        fechacon.style.marginTop = "250px";
+        for (var i = 0; i < titleCell.length; i++) {
+            titleCell[i].classList.add('nueva-clase');
+        }
 
         if (element) {
             const canvas = await html2canvas(element, { scale: 4 });
@@ -190,7 +195,7 @@ export const DetailReserva = ({ reserva }: Props) => {
     return (
         <>
             <Grid container spacing={2}>
-                <Grid item xs={12} sm={12} md={4} lg={4}>
+                <Grid item xs={12} sm={12} md={4} lg={12}>
                     <Card className='card-servicio-iten'>
                         <CardContent>
                             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -280,14 +285,15 @@ export const DetailReserva = ({ reserva }: Props) => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={12} sm={12} md={8} lg={8}>
+                <Grid item xs={12} sm={12} md={8} lg={12}>
                     <Card>
                         <CardContent>
                             <IconButton onClick={() => setOpen(true)}>Agregar un adicional<Add /></IconButton>
-                            <div id="receipt-content" style={{ maxWidth: '600px', margin: '0px auto' }}>
+                            <div id="receipt-content" style={{ margin: '0px auto' }}>
                                 <div style={{ padding: '20px' }}>
-                                    <p id='fecha-content'>Fecha: {initFecha.mindataFor()}</p>
-                                    <p>Nombre del Cliente: {`${firstName} ${lastName}`}</p>
+                                    <p className='tablefon' id='fecha-content'><strong>NOTA DE VENTA</strong></p>
+                                    <p className='tablefon'>Fecha: {initFecha.mindataFor()} </p>
+                                    <p className='tablefon'>Cliente: {`${firstName} ${lastName}`}</p>
                                     <TableSale ventas={ventas} subTotal={subTotal} />
                                 </div>
                             </div>

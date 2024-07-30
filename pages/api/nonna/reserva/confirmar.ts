@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '../../../../database';
-import { Colaborador, Reserva, Servicio, Venta } from '../../../../model';
+import { Colaborador, Reserva } from '../../../../model';
 import { isValidObjectId } from 'mongoose';
 import { ISalef } from '../../../../interface';
 

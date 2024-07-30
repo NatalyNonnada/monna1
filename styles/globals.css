@@ -740,3 +740,19 @@ body {
   font-size: 20px;
   color: rgb(26, 26, 26);
 }
+
+.nueva-clase {
+  font-size: 42px;
+}
+
+th {
+  border-bottom: 3px solid rgb(0, 0, 0) !important;
+}
+
+.bor td {
+  border-top: 3px solid rgb(0, 0, 0) !important;
+}
+
+/* td {
+ 
+} */

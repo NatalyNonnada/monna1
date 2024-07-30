@@ -26,7 +26,7 @@ export const OrderSummary = ({ total, date, hour, title, tap = 0 }: Props) => {
 
     return (
         <Card sx={{ padding: 2 }} className='respo-card-info'>
-            <Typography className='title-cita' textAlign='center'>Informacion del servicio</Typography>
+            <Typography className='title-cita' textAlign='center'>Información del servicio</Typography>
             <br />
             <Card className='card-servicio' >
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>

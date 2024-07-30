@@ -168,7 +168,7 @@ const OrderPorPage: NextPage<Props> = ({ order }) => {
                             <Divider sx={{ my: 1 }} />
                             <br />
                             <CardActions className='checkout' style={{ justifyContent: 'center', animation: 'fadeIn', animationDuration: '1s' }}>
-                                <button onClick={handleDelete} className='fSJGrc'>Elinar orden</button>
+                                <button onClick={handleDelete} className='fSJGrc'>Eliminar orden</button>
                             </CardActions>
                         </Card>
                     </Grid>
