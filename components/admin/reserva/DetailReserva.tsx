@@ -130,6 +130,7 @@ export const DetailReserva = ({ reserva }: Props) => {
                 }
             };
         }
+        clearVenta();
     }
 
     const handleFin = async () => {
