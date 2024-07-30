@@ -14,7 +14,6 @@ export const AndLayout: FC<Props> = ({ children, title, pageDescription }) => {
         <>
             <Head>
                 <meta name="robots" content='index,follow' />
-
                 <meta name="description" content={pageDescription} />
                 <meta name="og:title" content={title} />
                 <meta name="og:description" content={pageDescription} />
