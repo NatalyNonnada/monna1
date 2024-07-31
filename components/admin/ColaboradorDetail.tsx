@@ -42,6 +42,7 @@ export const ColaboradorDetail = ({ colaborador }: Props) => {
   const [bloqueos, setBloqueos] = useState<hors[]>([]);
   const [servicios, setServicios] = useState<hors[]>([])
   const [isLoading, setSetIsLoaing] = useState(false);
+  const [searchText, setSearchText] = useState('');
   const [tipo, setTipo] = useState('');
   const [open, setOpen] = useState(false);
   const [openHora, setOpenHora] = useState(false);
@@ -113,7 +114,18 @@ export const ColaboradorDetail = ({ colaborador }: Props) => {
     const fillser = colaborador.listHd.filter(p => p.servicio !== 'Bloqueado')
     setBloqueos(fillblo);
     setServicios(fillser);
-  }, [colaborador])
+  }, [colaborador]);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(event.target.value);
+  };
+
+  const filteredListHd = bloqueos.filter(hd =>
+    hd.servicio.toLowerCase().includes(searchText.toLowerCase()) ||
+    hd.fecha.toLowerCase().includes(searchText.toLowerCase()) ||
+    hd.hora.toLowerCase().includes(searchText.toLowerCase())
+  );
+
 
   return (
     <Container>
@@ -214,10 +226,26 @@ export const ColaboradorDetail = ({ colaborador }: Props) => {
               >
                 FECHAS NO DISPONIBLES
               </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center' }}>
+              <TextField
+                variant="outlined"
+                fullWidth
+                placeholder="Buscar..."
+                value={searchText}
+                onChange={handleSearchChange}
+                sx={{ marginBottom: 2, marginTop: 2 }}
+              />
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '5px',
+                alignItems: 'center',
+                overflowY: 'auto',
+                maxHeight: '400px',
+              }}>
+
                 {
                   bloqueos.length > 0 && (
-                    <CardBloque horas={bloqueos} id={colaborador._id || ''} handleDelete={deleteHora} handleLoging={handleLoging} />
+                    <CardBloque horas={filteredListHd} id={colaborador._id || ''} handleDelete={deleteHora} handleLoging={handleLoging} />
                   )
                 }
               </Box>

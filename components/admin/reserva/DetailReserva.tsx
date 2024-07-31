@@ -12,6 +12,7 @@ import jsPDF from 'jspdf';
 import { Add } from '@mui/icons-material';
 import { ModalAdicional } from '../servicios';
 import { TableSale } from './TableSale';
+import { DescuentoM } from './DescuentoM';
 
 interface Props { reserva: IReserva; }
 
@@ -38,6 +39,7 @@ interface Items {
     celular: string;
     servicio: string;
     total: number;
+    careserva: number;
     quanty: number;
 }
 
@@ -52,13 +54,13 @@ export const DetailReserva = ({ reserva }: Props) => {
     const [adicional, setAdicionales] = useState<Iservicio[]>([]);
     const [listItem, setListItem] = useState<Items[]>([]);
     const [open, setOpen] = useState(false);
+    const [openDes, setOpenDes] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm<datar>({ defaultValues: { ...black } });
-    const { addSaleToCart, addAdicionales, addSaleLoaded, clearVenta, ventas, total: subTotal } = useContext(SaleContext);
+    const { addSaleToCart, addAdicionales, addSaleLoaded, clearVenta, addDescuento, ventas, total: totalg, subTotalg, desc } = useContext(SaleContext);
     const { confiReserva, getAdicionales } = useReserva();
     const { saveVenta } = useVenta();
 
     const handleConfi = async (data: datar) => {
-        //add carrito y confirma
         setLoading(true)
         const { hasError } = await confiReserva({ ...data, id: _id || '' });
 
@@ -74,6 +76,7 @@ export const DetailReserva = ({ reserva }: Props) => {
             celular: `${phone}`,
             servicio: servicio,
             total: total,
+            careserva: careserva,
         })
     }
 
@@ -88,6 +91,7 @@ export const DetailReserva = ({ reserva }: Props) => {
             celular: `${phone}`,
             servicio: servicio,
             total: total,
+            careserva: careserva
         })
     }
 
@@ -124,23 +128,16 @@ export const DetailReserva = ({ reserva }: Props) => {
             logoImg.src = logoUrl;
             logoImg.onload = () => {
                 pdf.addImage(logoImg, 'PNG', 15, 1, 50, 15);
-                const pdfBlob = pdf.output('blob');
-                const blobUrl = URL.createObjectURL(pdfBlob);
-                const newWindow = window.open(blobUrl, '_blank');
+                pdf.save('receipt.pdf');
 
-                if (newWindow) {
-                    newWindow.addEventListener('load', () => {
-                        newWindow.print();
-                    });
-                }
             };
         }
+
         clearVenta();
     }
 
     const handleFin = async () => {
-
-        if (subTotal > 0) {
+        if (subTotalg > 0) {
 
             setLoading(true);
 
@@ -182,6 +179,7 @@ export const DetailReserva = ({ reserva }: Props) => {
                         fecha: '-',
                         hora: '-',
                         codigo: '-',
+                        careserva: 0,
                         celular: phone || '',
                         servicio: item.title,
                         total: item.price,
@@ -289,12 +287,13 @@ export const DetailReserva = ({ reserva }: Props) => {
                     <Card>
                         <CardContent>
                             <IconButton onClick={() => setOpen(true)}>Agregar un adicional<Add /></IconButton>
+                            <IconButton onClick={() => setOpenDes(true)}>Agregar descuento<Add /></IconButton>
                             <div id="receipt-content" style={{ margin: '0px auto' }}>
                                 <div style={{ padding: '20px' }}>
                                     <p className='tablefon' id='fecha-content'><strong>NOTA DE VENTA</strong></p>
                                     <p className='tablefon'>Fecha: {initFecha.mindataFor()} </p>
                                     <p className='tablefon'>Cliente: {`${firstName} ${lastName}`}</p>
-                                    <TableSale ventas={ventas} subTotal={subTotal} />
+                                    <TableSale ventas={ventas} desc={desc} subTotalg={subTotalg} total={totalg} />
                                 </div>
                             </div>
                             <br />
@@ -303,7 +302,7 @@ export const DetailReserva = ({ reserva }: Props) => {
                                     variant='contained'
                                     color='success'
                                     onClick={handleFin}
-                                    disabled={!isPaid}
+                                    disabled={!ventas.some(a => a._id === _id)}
                                 >
                                     Finalizar servicio
                                 </Button>
@@ -313,6 +312,7 @@ export const DetailReserva = ({ reserva }: Props) => {
                 </Grid>
             </Grid>
             <ModalAdicional open={open} adicional={listItem} handleClose={handleClose} addAdicional={addAdicional} />
+            <DescuentoM open={openDes} total={totalg} handleClose={() => setOpenDes(false)} addDescuento={addDescuento} />
             <LoadingCircular loading={loading} />
         </>
     )

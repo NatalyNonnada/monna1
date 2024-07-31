@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Checkbox, FormControlLabel, Modal, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Checkbox, FormControlLabel, Modal, TextField, Typography } from '@mui/material';
 import { priceBodyTemplate } from '../../../utils';
 import { styleCardReserva } from '../styleCardReserva';
 import { useState } from 'react';
@@ -11,6 +11,7 @@ interface Item {
     hora: string;
     codigo: string;
     celular: string;
+    careserva: number,
     quanty: number;
     servicio: string;
     total: number;
@@ -26,6 +27,7 @@ interface Props {
 export const ModalAdicional = ({ open, adicional, handleClose, addAdicional }: Props) => {
 
     const [newListArr, setNewListArr] = useState<Item[]>([]);
+    const [searchText, setSearchText] = useState('');
 
     const onChangeSize = (size: Item) => {
         size.quanty = 1;
@@ -55,6 +57,14 @@ export const ModalAdicional = ({ open, adicional, handleClose, addAdicional }: P
         addAdicional(newListArr);
     }
 
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchText(event.target.value);
+    };
+
+    const filteredListHd = adicional.filter(hd =>
+        hd.servicio.toLowerCase().includes(searchText.toLowerCase())
+    );
+
     return (
         <Modal
             open={open}
@@ -64,27 +74,46 @@ export const ModalAdicional = ({ open, adicional, handleClose, addAdicional }: P
         >
             <Card sx={{ ...styleCardReserva }}>
                 <CardContent>
-                    {
-                        adicional.map(size => (
-                            <div key={size._id}>
-                                <FormControlLabel
-                                    control={<Checkbox checked={newListArr.some(p => p._id?.toString() === size._id?.toString())} />}
-                                    label={`${size.servicio} - ${priceBodyTemplate({ price: `${size.total}` })}`}
-                                    onChange={() => onChangeSize(size)}
-                                />
-                                {
-                                    newListArr.some(p => p._id?.toString() === size._id?.toString()) && (
-                                        <ItemCounter
-                                            currentValue={size.quanty}
-                                            updatedQuantity={(value) => updatedQuantity(size, value)}
-                                            stock={10}
-                                            acstokc={false}
-                                        />
-                                    )
-                                }
-                            </div>
-                        ))
-                    }
+                    <TextField
+                        variant="outlined"
+                        placeholder="Buscar..."
+                        fullWidth
+                        value={searchText}
+                        onChange={handleSearchChange}
+                        sx={{ marginBottom: 2 }}
+                    />
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            overflowY: 'auto',
+                            maxHeight: '400px',
+                        }}
+                    >
+
+                        {
+                            filteredListHd.map(size => (
+                                <div key={size._id}>
+                                    <FormControlLabel
+                                        control={<Checkbox checked={newListArr.some(p => p._id?.toString() === size._id?.toString())} />}
+                                        label={`${size.servicio} - ${priceBodyTemplate({ price: `${size.total}` })}`}
+                                        onChange={() => onChangeSize(size)}
+                                    />
+                                    {
+                                        newListArr.some(p => p._id?.toString() === size._id?.toString()) && (
+                                            <ItemCounter
+                                                currentValue={size.quanty}
+                                                updatedQuantity={(value) => updatedQuantity(size, value)}
+                                                stock={10}
+                                                acstokc={false}
+                                            />
+                                        )
+                                    }
+                                </div>
+                            ))
+                        }
+                    </Box>
+                    <br />
                     <Typography component='div' textAlign='center'>
                         <Button onClick={handleAdd} size='large' color='primary'>Agregar</Button>
                     </Typography>

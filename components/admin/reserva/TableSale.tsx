@@ -5,10 +5,12 @@ import { priceBodyTemplate } from '../../../utils';
 
 interface Props {
     ventas: IVenta[];
-    subTotal: number;
+    subTotalg: number;
+    total: number;
+    desc: number;
 }
 
-export const TableSale = ({ ventas, subTotal }: Props) => {
+export const TableSale = ({ ventas, subTotalg = 0, desc = 0, total = 0, }: Props) => {
     return (
         <TableContainer component={Paper}>
             <Table aria-label="spanning table">
@@ -26,12 +28,20 @@ export const TableSale = ({ ventas, subTotal }: Props) => {
                             <TableCell className='tablefon'>{row.servicio}</TableCell>
                             <TableCell className='tablefon' align="center">{row.quanty}</TableCell>
                             <TableCell className='tablefon' align="left">{priceBodyTemplate({ price: `${row.total}` })}</TableCell>
-                            <TableCell className='tablefon' align="left">{priceBodyTemplate({ price: `${row.total * row.quanty}` })}</TableCell>
+                            <TableCell className='tablefon' align="left">{priceBodyTemplate({ price: `${row.total * row.quanty}` })} </TableCell>
                         </TableRow>
                     ))}
                     <TableRow className='bor'>
+                        <TableCell className='tablefon' colSpan={3} style={{ fontWeight: 'bold' }} >SubTotal</TableCell>
+                        <TableCell className='tablefon' style={{ fontWeight: 'bold' }} align="left">{priceBodyTemplate({ price: `${subTotalg}` })}</TableCell>
+                    </TableRow>
+                    <TableRow >
+                        <TableCell className='tablefon' colSpan={3} style={{ fontWeight: 'bold' }} >Descuento</TableCell>
+                        <TableCell className='tablefon' style={{ fontWeight: 'bold' }} align="left">{priceBodyTemplate({ price: `${desc}` })}</TableCell>
+                    </TableRow>
+                    <TableRow className='bor'>
                         <TableCell className='tablefon' colSpan={3} style={{ fontWeight: 'bold' }} >Total</TableCell>
-                        <TableCell className='tablefon' style={{ fontWeight: 'bold' }} align="left">{priceBodyTemplate({ price: `${subTotal}` })}</TableCell>
+                        <TableCell className='tablefon' style={{ fontWeight: 'bold' }} align="left">{priceBodyTemplate({ price: `${total}` })}</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>

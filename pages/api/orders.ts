@@ -122,7 +122,7 @@ const postOrder = async (req: NextApiRequest, res: NextApiResponse) => {
                 { 'morshift._id': _id },
                 { 'aftshift._id': _id }
             ]
-        }).select('_id morshift aftshift date hour category').lean();
+        }).select('_id morshift aftshift date hour category');
 
         if (!existeHour) {
             await db.disconnect();
@@ -173,7 +173,7 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
 
         await db.checkConnection();
 
-        const existOr = await Order.findById({ _id: id }).populate('Servicio').lean();
+        const existOr = await Order.findById({ _id: id }).populate('Servicio');
 
         const servicr: Iservicio = {
             ...existOr?.Servicio as unknown as Iservicio

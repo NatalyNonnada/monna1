@@ -5,6 +5,7 @@ export interface IVenta {
     hora: string;
     codigo: string;
     quanty: number;
+    careserva: number;
     celular: string;
     servicio: string;
     total: number;

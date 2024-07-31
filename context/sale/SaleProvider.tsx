@@ -7,6 +7,8 @@ import { initFecha } from '../../utils';
 
 export interface SaleState {
     total: number;
+    desc: number;
+    subTotalg: number;
     isLoaded: boolean;
     ventas: IVenta[];
     venta?: IVenta;
@@ -16,6 +18,8 @@ const SALE_INITIAL_STATE: SaleState = {
     isLoaded: true,
     ventas: [],
     total: 0,
+    desc: 0,
+    subTotalg: 0
 }
 
 interface Props {
@@ -32,9 +36,31 @@ export const SaleProvider: FC<Props> = ({ children }) => {
     const [state, dispatch] = useReducer(saleReducer, SALE_INITIAL_STATE);
 
     useEffect(() => {
-        const total = state.ventas.reduce((prev, current) => (current.total * current.quanty) + prev, 0);
-        dispatch({ type: '[Sale] - Set total', payload: total });
+
+        const subTotalg = state.ventas.reduce((prev, current) => (current.total * current.quanty) + prev, 0);
+
+        const descuento = state.desc;
+
+        const orderSummary = {
+            subTotalg,
+            desc: descuento,
+            total: subTotalg - descuento
+        }
+
+        dispatch({ type: '[Sale] - Set total', payload: orderSummary });
     }, [state.ventas]);
+
+    useEffect(() => {
+        if (state.desc > 0) {
+            const orderSummary = {
+                subTotalg: state.subTotalg,
+                desc: state.desc,
+                total: state.subTotalg - state.desc
+            }
+
+            dispatch({ type: '[Sale] - Set total', payload: orderSummary });
+        }
+    }, [state.desc])
 
 
     const clearVenta = () => {
@@ -81,9 +107,9 @@ export const SaleProvider: FC<Props> = ({ children }) => {
         }
     }
 
-    const ChangeLoaded = (change: boolean) => {
-
-    }
+    const addDescuento = (descu: number) => {
+        dispatch({ type: '[Sale] - Set descuento', payload: descu })
+    };
 
     const addAdicionales = (adicionales: IVenta[]) => {
 
@@ -114,7 +140,7 @@ export const SaleProvider: FC<Props> = ({ children }) => {
             // Methods
             clearVenta,
             addSaleToCart,
-            ChangeLoaded,
+            addDescuento,
             addSaleLoaded,
             addAdicionales
         }}>

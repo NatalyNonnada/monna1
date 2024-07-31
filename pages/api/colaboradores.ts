@@ -123,7 +123,7 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
         const colaboradores = await Colaborador.find({
             category: categoria,
             state: true
-        }).lean();
+        })
 
         await db.disconnect();
 
@@ -143,15 +143,13 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
                     }
                 });
 
-                const isSaturday = esSabado(`${data.date}`);
-                if (!isSaturday) {
-                    colaborador.aftshift.forEach(turno => {
-                        if (!existSet.has(turno.hour) && !uniqueHours.has(turno.hour)) {
-                            uniqueHours.add(turno.hour);
-                            result.push(turno);
-                        }
-                    });
-                }
+                colaborador.aftshift.forEach(turno => {
+                    if (!existSet.has(turno.hour) && !uniqueHours.has(turno.hour)) {
+                        uniqueHours.add(turno.hour);
+                        result.push(turno);
+                    }
+                });
+
             } else {
                 colaborador.morshift.forEach(turno => {
                     if (!uniqueHours.has(turno.hour)) {

@@ -40,9 +40,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 const getReservas = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
 
-        await db.connect();
+        await db.checkConnection();
 
-        const reservas = await Reserva.find().populate('colaborador');
+        const reservas = await Reserva.find().populate('colaborador').lean();
 
         await db.disconnect();
 
@@ -52,7 +52,7 @@ const getReservas = async (req: NextApiRequest, res: NextApiResponse) => {
         console.log(error);
         await db.disconnect();
         res.status(400).json({
-            message: 'contacte a CinCout, no se pudor cargar los departametos'
+            message: 'contacte a CinCout, no se pudo cargar las reservas'
         })
     }
 

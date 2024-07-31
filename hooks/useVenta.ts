@@ -20,7 +20,9 @@ export const useVenta = () => {
                 data: venta
             });
 
-            replace('/nonna/reservas');
+            setTimeout(() => {
+                replace('/nonna/reservas');
+            }, 900);
 
             return { hasError: true }
 

@@ -117,7 +117,7 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Faltan servicios' });
         }
 
-        await db.checkConnection()
+        await db.checkConnection();
 
         servicios.map(async da => {
 
@@ -125,20 +125,19 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
 
                 const cod = `${da.codigo}${da.hora}`.replace(/\s+/g, '')
                 const cola = await Colaborador.findById({ _id: da.cola }).select('_id fullnames date listHd');
+                const dbReserva = await Reserva.findById({ _id: da._id?.toString() });
 
-                if (cola) {
+                if (cola && dbReserva) {
 
                     const newHd = cola.listHd.filter(p => !(p.fecha.toString() === da.codigo && p.hora.toString() === da.hora.toString()))
                     const newDate = cola.date.filter(p => p !== cod);
 
-                    // Actualizar
                     await cola.updateOne({
                         listHd: newHd,
                         date: newDate
                     })
 
-                    //eliminar reserva
-                    await Reserva.deleteOne({ _id: da._id })
+                    await dbReserva.deleteOne({ _id: da._id?.toString() })
 
                 }
             }
