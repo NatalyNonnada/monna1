@@ -28,12 +28,6 @@ function esFinDeSemana(fechaIngresada: string): boolean {
     return diaSemana === 0;
 }
 
-function esSabado(fechaIngresada: string): boolean {
-    const fechaIngresadaDate = new Date(fechaIngresada);
-    const diaSemana = fechaIngresadaDate.getDay();
-    return diaSemana === 6;
-}
-
 function parseTimeToDate(time: string): Date {
     const [timePart, modifier] = time.split(' ');
     let [hours, minutes] = timePart.split(':').map(Number);
@@ -157,16 +151,12 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
                         result.push(turno);
                     }
                 });
-
-                const isSaturday = esSabado(`${data.date}`);
-                if (!isSaturday) {
-                    colaborador.aftshift.forEach(turno => {
-                        if (!uniqueHours.has(turno.hour)) {
-                            uniqueHours.add(turno.hour);
-                            result.push(turno);
-                        }
-                    });
-                }
+                colaborador.aftshift.forEach(turno => {
+                    if (!uniqueHours.has(turno.hour)) {
+                        uniqueHours.add(turno.hour);
+                        result.push(turno);
+                    }
+                });
             }
         });
 
