@@ -117,13 +117,13 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Faltan servicios' });
         }
 
-        await db.checkConnection();
 
         servicios.map(async da => {
 
             if (da.codigo !== '-') {
 
                 const cod = `${da.codigo}${da.hora}`.replace(/\s+/g, '')
+                await db.checkConnection();
                 const cola = await Colaborador.findById({ _id: da.cola }).select('_id fullnames date listHd');
                 const dbReserva = await Reserva.findById({ _id: da._id?.toString() });
 
@@ -132,10 +132,14 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
                     const newHd = cola.listHd.filter(p => !(p.fecha.toString() === da.codigo && p.hora.toString() === da.hora.toString()))
                     const newDate = cola.date.filter(p => p !== cod);
 
+                    await db.checkConnection();
+
                     await cola.updateOne({
                         listHd: newHd,
                         date: newDate
                     })
+
+                    await db.checkConnection();
 
                     await dbReserva.deleteOne({ _id: da._id?.toString() })
 
