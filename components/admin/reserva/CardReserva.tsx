@@ -28,7 +28,7 @@ export const CardReserva = ({ reserva }: Props) => {
                     <Typography className='reser-title'><strong>{email}</strong></Typography>
                     <Typography className='reser-title'><strong>{phone}</strong></Typography>
                     <Divider sx={{ my: 1 }} />
-                    <Link href={`/nonna/reservas/${_id}`}>
+                    <Link href={`/nonna/reservas/${_id?.toString()}`}>
                         <Button style={{ width: '100%' }} color='primary'>Ver reserva</Button>
                     </Link>
                 </Box>

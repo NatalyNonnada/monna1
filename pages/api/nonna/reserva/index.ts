@@ -42,7 +42,10 @@ const getReservas = async (req: NextApiRequest, res: NextApiResponse) => {
 
         await db.checkConnection();
 
-        const reservas = await Reserva.find().populate('colaborador').lean();
+        const reservas = await Reserva.find().populate({
+            path: 'colaborador',
+            select: 'fullnames _id'
+        }).select('_id colaborador shoppingAddress servicio hora fecha total careserva nureserva iniPago isPaid cafinal finPago nufinal');
 
         await db.disconnect();
 
