@@ -73,7 +73,7 @@ export const ValidAddress = (data: shippingAddress | undefined): boolean => {
         return true;
     }
 
-    if (islas(data.firstName) || islas(data.lastName) || isEmail(data.email) || isPhone(data.phone)) {
+    if (islas(data.firstName) || islas(data.lastName) || isPhone(data.phone)) {
         return true;
     } else {
         return false;
