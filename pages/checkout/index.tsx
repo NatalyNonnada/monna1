@@ -106,7 +106,6 @@ const CheckoutPage: NextPage = () => {
                             <Card className='card-servicio' >
                                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                     <Typography style={{ fontSize: '16px' }} variant='subtitle2'>{shippingAddress?.firstName} {shippingAddress?.lastName}</Typography>
-                                    <Typography style={{ fontSize: '16px' }} variant='subtitle2'>{shippingAddress?.email} </Typography>
                                     <Typography style={{ fontSize: '16px' }} variant='subtitle2'>{shippingAddress?.phone}</Typography>
                                 </Box>
                             </Card>

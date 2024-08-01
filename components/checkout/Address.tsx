@@ -35,7 +35,7 @@ export const Address = ({ updateAddress, date, hour }: Props) => {
     const handleRegister = (form: IShoppingAddress) => {
         if (date !== '' && hour?.hour !== '') {
             setLoading(true)
-            updateAddress(form);
+            updateAddress({ ...form, email: '-' });
             push('/checkout');
         }
         return;
@@ -76,25 +76,10 @@ export const Address = ({ updateAddress, date, hour }: Props) => {
                                             required: 'Este campo es requido',
                                             validate: validations.islas,
                                             minLength: { value: 3, message: 'Apellido no valido' },
-                                            maxLength: { value: 30, message: 'Apellido no valido' },
+                                            maxLength: { value: 40, message: 'Apellido no valido' },
                                         })}
                                         error={!!errors.lastName}
                                         helperText={errors.lastName?.message}
-                                    />
-                                </FormControl>
-                            </div>
-                            <div className='cGnOjO'>
-                                <FormControl fullWidth>
-                                    <TextField
-                                        label="E-mail"
-                                        variant='outlined'
-                                        {...register('email', {
-                                            required: 'Este campo es requido',
-                                            validate: validations.isEmail,
-                                            maxLength: { value: 70, message: 'Correo no valido' }
-                                        })}
-                                        error={!!errors.email}
-                                        helperText={errors.email?.message}
                                     />
                                 </FormControl>
                             </div>

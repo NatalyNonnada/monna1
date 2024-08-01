@@ -29,7 +29,7 @@ const isValidPassword = (password: string): boolean => {
 };
 
 export const islas = (val1: string): string | undefined => {
-    return validator.isAlpha(val1, 'es-ES', { ignore: '' })
+    return validator.isAlpha(val1, 'es-ES', { ignore: ' ' })
         ? undefined
         : 'Apellido no valido';
 }
