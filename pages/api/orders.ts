@@ -173,7 +173,7 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
 
         await db.checkConnection();
 
-        const existOr = await Order.findById({ _id: id }).populate('Servicio');
+        const existOr = await Order.findById({ _id: id }).populate('Servicio').lean();
 
         const servicr: Iservicio = {
             ...existOr?.Servicio as unknown as Iservicio
