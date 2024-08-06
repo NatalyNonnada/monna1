@@ -9,12 +9,10 @@ import { IReserva } from '../../../interface';
 
 const ReservasPage: NextPage = () => {
 
-    const [recarg, setrecarg] = useState(false);
     const [fillReserva, setFillReserva] = useState<IReserva[]>([])
-    const [reservas, setReservas] = useState<IReserva[]>([])
     const [sear, setSear] = useState('');
 
-    const { getReservas } = useReserva()
+    const { getReservas, setState, lsReservas, lodingReserva, chargeReserva } = useReserva()
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
@@ -22,26 +20,21 @@ const ReservasPage: NextPage = () => {
     }
 
     useEffect(() => {
-        if (!recarg) {
-            setrecarg(true);
+        if (!chargeReserva) {
             const obtResevas = async () => {
-                const { hasError, listData } = await getReservas();
-                if (!hasError) {
-                    setReservas(listData)
-                    return;
-                }
+                await getReservas();
             }
             obtResevas();
         }
-    }, [recarg]);
+    }, [chargeReserva]);
 
     useEffect(() => {
-        setFillReserva(reservas);
-    }, [reservas]);
+        setFillReserva(lsReservas);
+    }, [lsReservas]);
 
     useEffect(() => {
         if (sear !== '') {
-            const bus = reservas.filter(p =>
+            const bus = lsReservas.filter(p =>
                 p.shoppingAddress?.phone.includes(sear) ||
                 p.fecha.toLowerCase().includes(sear) ||
                 p.hora.hour.toLowerCase().includes(sear) ||
@@ -49,7 +42,7 @@ const ReservasPage: NextPage = () => {
             )
             setFillReserva(bus);
         } else {
-            setFillReserva(reservas);
+            setFillReserva(lsReservas);
         }
     }, [sear])
 
@@ -60,9 +53,9 @@ const ReservasPage: NextPage = () => {
             icon={<CreditCardOutlined />}
         >
             <Container>
-                <LoadingCircular loading={!recarg} />
+                <LoadingCircular loading={lodingReserva} />
                 <BusquedaIten sear={sear} handleSearchChange={handleSearchChange}>
-                    <IconButton onClick={() => setrecarg(false)}>
+                    <IconButton onClick={() => setState(false, 'chargeReserva')}>
                         <Refresh style={{ color: 'red', fontSize: '30px' }} />
                     </IconButton>
                 </BusquedaIten>

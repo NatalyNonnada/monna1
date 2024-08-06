@@ -33,7 +33,6 @@ const CheckoutPage: NextPage = () => {
         Swal.fire({
             title: "!Atención!",
             icon: "warning",
-            showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             width: 1000,
@@ -61,8 +60,7 @@ const CheckoutPage: NextPage = () => {
                     Swal.fire({
                         icon: "error",
                         title: "Oops...",
-                        text: `Ocurrio un error! ${message}`,
-                        footer: '<a href="http://wa.me/51993759147?"  target="_blank">Reportar?</a>'
+                        text: `No pudimos procesar tu orden. Intentalo más tarde`,
                     });
                 }
             }

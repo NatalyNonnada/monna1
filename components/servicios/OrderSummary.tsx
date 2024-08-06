@@ -68,7 +68,7 @@ export const OrderSummary = ({ total, date, hour, title, tap = 0 }: Props) => {
                 <button
                     onClick={handlerCheck}
                     className={date === '' || hour?.hour === '' ? `fdfdbuttdis` : 'fSJGrc'}>
-                    Continuar
+                    Siguiente
                 </button>
             </CardActions>
         </Card>

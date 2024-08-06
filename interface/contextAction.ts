@@ -1,0 +1,1 @@
+export type contextAction = 'lista' | 'nuevo' | 'actualizar' | 'eliminar' | 'ver';

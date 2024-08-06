@@ -1,4 +1,4 @@
-import { IVenta } from '../../interface';
+import { IReserva, IVenta } from '../../interface';
 import { SaleState } from './SaleProvider';
 
 type SaleActionType =
@@ -13,6 +13,13 @@ type SaleActionType =
     }
     | { type: '[Sale] - Set descuento', payload: number }
     | { type: '[Sale] - Clear ventas' }
+    | { type: '[Cart] - Order complete' }
+    | { type: '[Reserva] - Loading', payload: boolean }
+    | { type: '[Reserva] - charge', payload: boolean }
+    | { type: '[Reserva] - Set List', payload: IReserva[] }
+    | { type: '[Reserva] - Update', payload: IReserva }
+    | { type: '[Reserva] - Remove', payload: IReserva }
+    | { type: '[Reserva] - View', payload: IReserva }
 
 export const saleReducer = (state: SaleState, action: SaleActionType): SaleState => {
 
@@ -54,6 +61,49 @@ export const saleReducer = (state: SaleState, action: SaleActionType): SaleState
                 desc: 0,
                 ventas: []
             }
+        case '[Reserva] - Loading':
+            return {
+                ...state,
+                lodingReserva: action.payload
+            }
+        case '[Reserva] - charge':
+            return {
+                ...state,
+                chargeReserva: action.payload
+            }
+
+        case '[Reserva] - Set List':
+            return {
+                ...state,
+                lsReservas: action.payload
+            }
+
+        case '[Reserva] - Update':
+
+            const updatedCat = state.lsReservas.map(event => {
+                if (event._id !== action.payload._id) return event;
+                return action.payload;
+            });
+
+            if (!updatedCat.find(event => event._id === action.payload._id)) {
+                updatedCat.push(action.payload);
+            }
+
+            return {
+                ...state,
+                lsReservas: updatedCat
+            }
+        case '[Reserva] - Remove':
+            return {
+                ...state,
+                lsReservas: state.lsReservas.filter(event => event._id !== action.payload._id)
+            }
+        case '[Reserva] - View':
+            return {
+                ...state,
+                viewReserva: { ...action.payload }
+            }
+
         default:
             return state;
     }

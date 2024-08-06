@@ -32,7 +32,7 @@ const CART_INITIAL_STATE: CartState = {
     total: 0,
     hour: undefined,
     selectedDate: '',
-    calenDate: ''
+    calenDate: '',
 }
 
 interface Props {
@@ -135,6 +135,8 @@ export const CartProvider: FC<Props> = ({ children }) => {
     const clearCard = () => {
         dispatch({ type: '[Cart] - Order complete' });
     }
+
+
 
     return (
         <CartContext.Provider value={{

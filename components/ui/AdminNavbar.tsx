@@ -1,6 +1,6 @@
 'use client';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { signOut } from 'next-auth/react';
 import { AppBar, Box, Button, Container, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import Swal from 'sweetalert2';
 import AdbIcon from '@mui/icons-material/Adb';
@@ -10,24 +10,11 @@ import { listPages } from '../../utils';
 
 export const AdminNavbar = () => {
 
-    // const toast = useRef<Toast>(null);
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const { asPath, replace, push } = useRouter();
-    // const { toogleSideMenu } = useContext(UiContext);
-
-    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const { push } = useRouter();
 
 
     const accept = async () => {
-        // signOut();
-        // toast.current?.show({ severity: 'warn', summary: 'Adios', detail: `Saliendo....`, life: 3000 });
+        signOut();
     }
 
     const onExitToApp = async () => {
@@ -47,7 +34,6 @@ export const AdminNavbar = () => {
 
     const handleHref = (path: string) => {
         push(`${path}`);
-        handleClose();
     }
 
     return (

@@ -2,32 +2,37 @@ import axios from 'axios';
 import { tesloApi } from '../api';
 import { IReserva, Iservicio } from '../interface';
 import { errorAlert } from '../alerts';
-import { useRouter } from 'next/router';
+import { useContext } from 'react';
+import { SaleContext } from '../context';
 
 interface controlErr { message: '' }
 
 interface datar {
     id: string;
-    nufinal: number;
-    cafinal: number;
-    finPago: string;
 }
 
 export const useReserva = () => {
 
-    const { reload } = useRouter();
+    const { lodingReserva, chargeReserva, lsReservas, setReserva, setState } = useContext(SaleContext);
 
-    const getReservas = async (): Promise<{ hasError: boolean, listData: IReserva[] }> => {
+    const getReservas = async () => {
         try {
 
-            const { data } = await tesloApi({
-                url: '/nonna/reserva',
-                method: 'GET'
-            });
+            if (!chargeReserva) {
 
-            const listData = data as IReserva[];
+                setState(true, 'lodingReserva');
 
-            return { hasError: false, listData }
+                const { data } = await tesloApi({
+                    url: '/nonna/reserva',
+                    method: 'GET'
+                });
+
+                const listData = data as IReserva[];
+
+                setReserva(listData, 'lista');
+                setState(false, 'lodingReserva');
+                setState(true, 'chargeReserva');
+            }
 
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -52,13 +57,21 @@ export const useReserva = () => {
     const confiReserva = async (upda: datar): Promise<{ hasError: boolean }> => {
         try {
 
-            await tesloApi({
+            setState(true, 'lodingReserva');
+
+            const { data } = await tesloApi({
                 url: '/nonna/reserva/confirmar',
                 method: 'PUT',
                 data: upda
             });
 
-            reload();
+
+            const newReser = data as IReserva;
+
+            setReserva(newReser, 'ver');
+            setState(false, 'lodingReserva');
+            setState(true, 'chargeReserva');
+
 
             return { hasError: true }
 
@@ -90,6 +103,8 @@ export const useReserva = () => {
                 method: 'GET'
             });
 
+            setState(false, 'lodingReserva');
+
             const adicionales = data as Iservicio[];
 
             return { hasError: false, adicionales }
@@ -115,8 +130,12 @@ export const useReserva = () => {
     }
 
     return {
+        lodingReserva,
+        lsReservas,
+        chargeReserva,
         getReservas,
         confiReserva,
-        getAdicionales
+        getAdicionales,
+        setState
     }
 }

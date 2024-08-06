@@ -48,7 +48,7 @@ export const Address = ({ updateAddress, date, hour }: Props) => {
                 <form className='gqJTdB' onSubmit={handleSubmit(handleRegister)} noValidate>
                     <div className="dIevbP">
                         <br />
-                        <Typography>Te notificaremos sobre tu cita al correo y/o celular que escribas aquí</Typography>
+                        <Typography>Te notificaremos sobre tu cita al celular que escribas aquí</Typography>
                         <br />
                         <div className='cLkOZc' style={{ padding: '10px' }} >
                             <div className='cGnOjO'>
@@ -99,7 +99,6 @@ export const Address = ({ updateAddress, date, hour }: Props) => {
                             </div>
                         </div>
                     </div>
-                    <Typography sx={{ mb: 2, mt: 1 }}>Al agendar, estás aceptando recibir e-mails de MONNA</Typography>
                     <button id='sumitarr' style={{ display: 'none' }} type='submit'>d</button>
                 </form>
             </Card>

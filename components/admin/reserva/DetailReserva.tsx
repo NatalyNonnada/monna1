@@ -50,21 +50,17 @@ export const DetailReserva = ({ reserva }: Props) => {
     const { fullnames, _id: cola } = { ...colaborador as IColaborador }
     const { phone, lastName, firstName } = { ...shoppingAddress }
 
-    const [loading, setLoading] = useState(false);
     const [adicional, setAdicionales] = useState<Iservicio[]>([]);
     const [listItem, setListItem] = useState<Items[]>([]);
     const [open, setOpen] = useState(false);
     const [openDes, setOpenDes] = useState(false);
-    const { register, handleSubmit, formState: { errors } } = useForm<datar>({ defaultValues: { ...black } });
     const { addSaleToCart, addAdicionales, addSaleLoaded, clearVenta, addDescuento, ventas, total: totalg, subTotalg, desc } = useContext(SaleContext);
-    const { confiReserva, getAdicionales } = useReserva();
+    const { confiReserva, getAdicionales, lodingReserva } = useReserva();
     const { saveVenta } = useVenta();
 
-    const handleConfi = async (data: datar) => {
-        setLoading(true)
-        const { hasError } = await confiReserva({ ...data, id: _id || '' });
+    const handleConfi = async () => {
 
-        setLoading(hasError);
+        await confiReserva({ id: reserva._id || '' });
 
         addSaleToCart({
             _id: _id || '',
@@ -129,7 +125,6 @@ export const DetailReserva = ({ reserva }: Props) => {
             logoImg.onload = () => {
                 pdf.addImage(logoImg, 'PNG', 15, 1, 50, 15);
                 pdf.save('receipt.pdf');
-
             };
         }
 
@@ -139,10 +134,9 @@ export const DetailReserva = ({ reserva }: Props) => {
     const handleFin = async () => {
         if (subTotalg > 0) {
 
-            setLoading(true);
-
             const { hasError } = await saveVenta({
-                servicios: ventas as Items[]
+                servicios: ventas as Items[],
+                idReserva: reserva._id || ''
             })
 
             if (hasError) {
@@ -152,7 +146,6 @@ export const DetailReserva = ({ reserva }: Props) => {
     }
 
     useEffect(() => {
-
         const cargarAdici = async () => {
             const { adicionales } = await getAdicionales();
             setAdicionales(adicionales);
@@ -193,7 +186,7 @@ export const DetailReserva = ({ reserva }: Props) => {
     return (
         <>
             <Grid container spacing={2}>
-                <Grid item xs={12} sm={12} md={4} lg={12}>
+                <Grid item xs={12} sm={12} md={12} lg={12}>
                     <Card className='card-servicio-iten'>
                         <CardContent>
                             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -220,62 +213,14 @@ export const DetailReserva = ({ reserva }: Props) => {
                                         <>
                                             <Typography>Falta pagar: {priceBodyTemplate({ price: `${total - careserva}` })} - {iniPago}</Typography>
                                             <Divider sx={{ my: 1 }} />
-                                            <form onSubmit={handleSubmit(handleConfi)}>
-                                                <FormControl fullWidth>
-                                                    <TextField
-                                                        variant='outlined'
-                                                        label="Número de operación"
-                                                        {...register('nufinal', {
-                                                            required: 'Este campo es requido',
-                                                            validate: (d) => validations.isPrice(`${d}`),
-                                                        })}
-                                                        error={!!errors.nufinal}
-                                                        helperText={errors.nufinal?.message}
-                                                    />
-                                                </FormControl>
-                                                <Divider sx={{ my: 1 }} />
-                                                <FormControl fullWidth>
-                                                    <TextField
-                                                        variant='outlined'
-                                                        label="Saldo"
-                                                        {...register('cafinal', {
-                                                            required: 'Este campo es requido',
-                                                            validate: (d) => validations.isPrice(`${d}`),
-                                                            min: { value: total - careserva, message: 'Tine que cancelar por completo' }
-                                                        })}
-                                                        error={!!errors.cafinal}
-                                                        helperText={errors.cafinal?.message}
-                                                    />
-                                                </FormControl>
-                                                <Divider sx={{ my: 1 }} />
-                                                <FormControl fullWidth>
-                                                    <InputLabel id="dormitorio-selects">Tipo de pago</InputLabel>
-                                                    <Select
-                                                        labelId="demo-simple-select-label"
-                                                        id="demo-simple-select"
-                                                        {...register('finPago')}
-                                                        defaultValue={`Yape`}
-                                                        label="Tipo de pago"
-                                                    >
-                                                        <MenuItem value="">Tipo de pago</MenuItem>
-                                                        {
-                                                            listPages.pagos.map(est => (
-                                                                <MenuItem key={est} value={est}>{est}</MenuItem>
-                                                            ))
-                                                        }
-                                                    </Select>
-                                                </FormControl>
-                                                <Divider sx={{ my: 1 }} />
-                                                <FormControl fullWidth>
-                                                    <Button
-                                                        type='submit'
-                                                        size='large'
-                                                        variant='contained'
-                                                        color='success'>
-                                                        Confirmar
-                                                    </Button>
-                                                </FormControl>
-                                            </form>
+                                            <Button
+                                                type='submit'
+                                                onClick={handleConfi}
+                                                size='large'
+                                                variant='contained'
+                                                color='success'>
+                                                Confirmar
+                                            </Button>
                                         </>
                                     )
                                 }
@@ -283,7 +228,7 @@ export const DetailReserva = ({ reserva }: Props) => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={12} sm={12} md={8} lg={12}>
+                <Grid item xs={12} sm={12} md={12} lg={12}>
                     <Card>
                         <CardContent>
                             <IconButton onClick={() => setOpen(true)}>Agregar un adicional<Add /></IconButton>
@@ -313,7 +258,7 @@ export const DetailReserva = ({ reserva }: Props) => {
             </Grid>
             <ModalAdicional open={open} adicional={listItem} handleClose={handleClose} addAdicional={addAdicional} />
             <DescuentoM open={openDes} total={totalg} handleClose={() => setOpenDes(false)} addDescuento={addDescuento} />
-            <LoadingCircular loading={loading} />
+            <LoadingCircular loading={lodingReserva} />
         </>
     )
 }

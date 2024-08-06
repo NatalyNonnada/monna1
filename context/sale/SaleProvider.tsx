@@ -1,5 +1,5 @@
 import { FC, useEffect, useReducer } from 'react';
-import { IVenta } from '../../interface';
+import { contextAction, IReserva, IVenta, lodingContext } from '../../interface';
 import { saleReducer } from './saleReducer';
 import { SaleContext } from './SaleContext';
 import Cookie from 'js-cookie';
@@ -12,6 +12,12 @@ export interface SaleState {
     isLoaded: boolean;
     ventas: IVenta[];
     venta?: IVenta;
+
+    lsReservas: IReserva[];
+    viewReserva: IReserva;
+    lodingReserva: boolean;
+    chargeReserva: boolean;
+
 }
 
 const SALE_INITIAL_STATE: SaleState = {
@@ -19,7 +25,29 @@ const SALE_INITIAL_STATE: SaleState = {
     ventas: [],
     total: 0,
     desc: 0,
-    subTotalg: 0
+    subTotalg: 0,
+    lsReservas: [],
+    viewReserva: {
+        servicio: '',
+        category: '',
+        hora: {
+            hour: '',
+            estate: false
+        },
+        fecha: '',
+        fechan: '',
+        total: 0,
+        isConfi: false,
+        nureserva: 0,
+        careserva: 0,
+        iniPago: '',
+        isPaid: false,
+        nufinal: 0,
+        cafinal: 0,
+        finPago: ''
+    },
+    lodingReserva: true,
+    chargeReserva: false
 }
 
 interface Props {
@@ -61,7 +89,6 @@ export const SaleProvider: FC<Props> = ({ children }) => {
             dispatch({ type: '[Sale] - Set total', payload: orderSummary });
         }
     }, [state.desc])
-
 
     const clearVenta = () => {
         const jsonArray = JSON.stringify([]);
@@ -134,6 +161,50 @@ export const SaleProvider: FC<Props> = ({ children }) => {
         dispatch({ type: '[Sale] - Set ventas', payload: newList })
     }
 
+    const setReserva = (supplier: IReserva | IReserva[], accion: contextAction) => {
+        switch (accion) {
+            case 'lista':
+                {
+                    dispatch({ type: '[Reserva] - Set List', payload: supplier as IReserva[] });
+                    return;
+                }
+            case 'actualizar':
+                {
+                    dispatch({ type: '[Reserva] - Update', payload: supplier as IReserva });
+                    return;
+                }
+            case 'eliminar':
+                {
+                    dispatch({ type: '[Reserva] - Remove', payload: supplier as IReserva });
+                    return;
+                }
+            case 'ver':
+                {
+                    dispatch({ type: '[Reserva] - View', payload: supplier as IReserva });
+                    return;
+                }
+            default:
+                return;
+        }
+    }
+
+    const setState = (estado: boolean, accion: lodingContext) => {
+        switch (accion) {
+            case 'lodingReserva':
+                {
+                    dispatch({ type: '[Reserva] - Loading', payload: estado });
+                    return;
+                }
+            case 'chargeReserva':
+                {
+                    dispatch({ type: '[Reserva] - charge', payload: estado });
+                    return;
+                }
+            default:
+                return;
+        }
+    }
+
     return (
         <SaleContext.Provider value={{
             ...state,
@@ -142,7 +213,9 @@ export const SaleProvider: FC<Props> = ({ children }) => {
             addSaleToCart,
             addDescuento,
             addSaleLoaded,
-            addAdicionales
+            addAdicionales,
+            setReserva,
+            setState
         }}>
             {children}
         </SaleContext.Provider>

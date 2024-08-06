@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { AppBar, Avatar, Badge, Box, IconButton, Toolbar, Typography } from '@mui/material';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import AdbIcon from '@mui/icons-material/Adb';
 
 export const Navbar = () => {
 

@@ -103,11 +103,11 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
         fechaLimite.setDate(mindata().getDate() + 21);
 
         if (esFinDeSemana(`${data.selectedDate}`)) {
-            return res.status(400).json({ message: 'No estamos disponibles para estas fechas intenta con otras' });
+            return res.status(400).json({ message: 'Fecha aún no disponible' });
         }
 
         if (mindata() >= fechaSelect || fechaLimite <= fechaSelect) {
-            return res.status(400).json({ message: 'No estamos disponibles para estas fechas intenta con otras' });
+            return res.status(400).json({ message: 'Fecha aún no disponible' });
         }
 
         const codigoCalen = `${format(fechaCalend, 'EEEE d MMMM yyy', { locale: es })}`;

@@ -1,5 +1,5 @@
 import { CartState } from './';
-import { IHour, Iservicio, IShoppingAddress } from '../../interface';
+import { IHour, IReserva, Iservicio, IShoppingAddress } from '../../interface';
 
 type CartActionType =
 
@@ -16,6 +16,13 @@ type CartActionType =
       }
    }
    | { type: '[Cart] - Order complete' }
+   | { type: '[Reserva] - Loading', payload: boolean }
+   | { type: '[Reserva] - charge', payload: boolean }
+   | { type: '[Reserva] - Set List', payload: IReserva[] }
+   | { type: '[Reserva] - Update', payload: IReserva }
+   | { type: '[Reserva] - Remove', payload: IReserva }
+   | { type: '[Reserva] - View', payload: IReserva }
+
 
 export const cartReducer = (state: CartState, action: CartActionType): CartState => {
 

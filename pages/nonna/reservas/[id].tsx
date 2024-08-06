@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { GetServerSideProps, NextPage } from 'next';
 import { AdminLayout } from '../../../components/layout/AdminLayout';
 import { CreditCardOutlined } from '@mui/icons-material';
@@ -6,10 +6,18 @@ import { Container } from '@mui/material';
 import { dbReserva } from '../../../database';
 import { IReserva } from '../../../interface';
 import { DetailReserva } from '../../../components';
+import { SaleContext } from '../../../context';
 
 interface Props { reserva: IReserva; }
 
 const ReservaPage: NextPage<Props> = ({ reserva }) => {
+
+    const { setReserva, viewReserva } = useContext(SaleContext);
+
+    useEffect(() => {
+        setReserva(reserva, 'ver');
+    }, [reserva])
+
     return (
         <AdminLayout
             title={'Reserva'}
@@ -17,14 +25,13 @@ const ReservaPage: NextPage<Props> = ({ reserva }) => {
             icon={<CreditCardOutlined />}
         >
             <Container>
-                <DetailReserva reserva={reserva} />
+                {viewReserva.fecha !== '' && (<DetailReserva reserva={viewReserva} />)}
             </Container>
         </AdminLayout>
     )
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-
 
     const { id = '' } = query;
 

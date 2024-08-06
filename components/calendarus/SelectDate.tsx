@@ -159,6 +159,8 @@ export const SelectDate = ({ total, date, hour = {
                                     <img style={{ blockSize: '100px' }} src='/illustration-calendar.png' />
                                 </picture>
                             </div>
+                            <Typography variant='h1'>No hay más citas para este día</Typography>
+
                         </Box>
                     </div>
                 )

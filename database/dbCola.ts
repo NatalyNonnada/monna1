@@ -8,7 +8,6 @@ interface controlErr {
     message: '';
 }
 
-
 export const getColaById = async (id: string): Promise<IColaborador | null> => {
 
     try {
