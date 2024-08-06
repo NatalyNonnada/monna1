@@ -99,12 +99,14 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
                         date: newDate
                     })
 
-                    await db.checkConnection();
-
-                    await dbReserva.deleteOne({ _id: da._id?.toString() })
-
                 }
             }
+        })
+
+        servicios.forEach(async da => {
+            await db.checkConnection();
+            const dbReserva = await Reserva.findById({ _id: da._id?.toString() });
+            await dbReserva?.deleteOne({ _id: da._id?.toString() })
         })
 
         await db.disconnect();
