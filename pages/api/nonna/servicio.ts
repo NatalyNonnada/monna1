@@ -35,13 +35,10 @@ const getServicio = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const Servicios = await Servicio.find().lean();
 
-        await db.disconnect();
-
         res.status(200).json(Servicios);
 
     } catch (error) {
-        console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte a CinCout, no se pudor cargar los servicios'
         })
@@ -63,25 +60,26 @@ const updateServicio = async (req: NextApiRequest, res: NextApiResponse) => {
         const dbServicio = await Servicio.findById({ _id });
 
         if (!dbServicio) {
-            await db.disconnect();
             return res.status(400).json({ message: 'No existe el servicio' });
         }
 
         if (!isValidCateg(category)) {
-            await db.disconnect();
             return res.status(400).json({ message: 'Categoria no valida' });
         }
 
         await db.checkConnection();
 
-        await dbServicio.updateOne({ title, price, reser, description, category, estado })
-        await db.disconnect();
+        dbServicio.title = title;
+        dbServicio.price = price;
+        dbServicio.description = description;
+        dbServicio.category = category;
+        dbServicio.estado = estado;
+
+        dbServicio.save();
 
         res.status(200).json(dbServicio);
 
     } catch (error) {
-        console.log(error);
-        await db.disconnect();
         res.status(400).json({
             message: 'contacte con CinCout. No se pudo actualizar el servicio'
         })
@@ -98,12 +96,10 @@ const createServicio = async (req: NextApiRequest, res: NextApiResponse) => {
         const dbServicio = await Servicio.findOne({ title });
 
         if (dbServicio) {
-            await db.disconnect();
             return res.status(400).json({ message: 'Servicio ya registrado' });
         }
 
         if (!isValidCateg(category)) {
-            await db.disconnect();
             return res.status(400).json({ message: 'Categoria no valida' });
         }
 
@@ -111,13 +107,9 @@ const createServicio = async (req: NextApiRequest, res: NextApiResponse) => {
 
         await newServicio.save();
 
-        await db.disconnect();
-
         res.status(200).json({ newDoc: newServicio });
 
     } catch (error) {
-        console.log(error);
-        await db.disconnect();
         res.status(400).json({
             message: 'contacte con CinCout, no se puedo registrar el servicio'
         })

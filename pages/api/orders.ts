@@ -73,12 +73,12 @@ const postOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         fechaLimite.setDate(mindata().getDate() + 21);
 
         if (esFinDeSemana(selectedDate)) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No estamos disponibles para estas fechas intenta con otras' });
         }
 
         if (mindata() >= fechaSelect || fechaLimite <= fechaSelect) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No estamos disponibles para estas fechas intenta con otras' });
         }
 
@@ -92,24 +92,24 @@ const postOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         const dbServicio = await Servicio.findOne({ _id: ids, estado: true });
 
         if (!dbServicio) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'El servicio fue dado de baja' });
         }
 
         // validamos el ID de la hora
         if (!isValidObjectId(_id)) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'Hora seleccionada no válida' });
         }
 
         if (validations.ValidAddress(shippingAddress)) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'Ocurrio un error, disculpa las molestias' });
         } else if (validations.ValidOrder({ date, selectedDate: new Date(selectedDate), total, Servicio: ids as string })) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'Ocurrio un error, disculpa las molestias' });
         } else if (validations.ValidHour(da as IHour)) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'Ocurrio un error, disculpa las molestias' });
         }
 
@@ -125,7 +125,7 @@ const postOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         }).select('_id morshift aftshift date hour category');
 
         if (!existeHour) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'Hora no valida' });
         }
 
@@ -135,7 +135,7 @@ const postOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         const codigo = `${format(fechaSelect, 'EEEE d MMMM yyy', { locale: es })} ${hourMor?.hour || hourAft?.hour}`.replace(/\s/g, "");
 
         if (existeHour.date.find(a => a === codigo)) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'La hora ya fue reservada, intente con otra hora' });
         }
 
@@ -148,13 +148,13 @@ const postOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
         await newOrder.save();
 
-        await db.disconnect();
+
 
         return res.status(201).json(newOrder._id);
 
     } catch (error) {
         console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte a monna, no se pudo registrar su cita'
         })
@@ -181,7 +181,7 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
 
         if (existOr) {
 
-            await db.disconnect();
+
 
             const newOrder: IUserReserva = {
                 _id: existOr._id.toString(),
@@ -203,7 +203,7 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
 
         if (existReser) {
 
-            await db.disconnect();
+
 
             const newReser: IUserReserva = {
                 _id: existReser._id.toString(),
@@ -219,7 +219,7 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(201).json(newReser);
         }
 
-        await db.disconnect();
+
 
         return res.status(400).json({
             message: 'La reserva fue eliminada'
@@ -227,7 +227,7 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
 
     } catch (error) {
         console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte a monna, no se pudor cargar su reserva'
         })

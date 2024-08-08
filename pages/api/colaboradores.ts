@@ -119,8 +119,6 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             state: true
         })
 
-        await db.disconnect();
-
         const uniqueHours = new Set<string>();
         const result: IHour[] = [];
 
@@ -188,8 +186,6 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200).json(result);
 
     } catch (error) {
-        console.log(error);
-        await db.disconnect();
         res.status(400).json({
             message: 'contacte a monna'
         })

@@ -55,7 +55,7 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
         const dbOrder = await Order.findOne({ _id: id }).populate('Servicio').lean();
 
         if (!dbOrder) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No existe la orden' });
         }
 
@@ -68,7 +68,7 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
         const dbServicio = await Servicio.findOne({ _id: servicr._id?.toString() });
 
         if (!dbServicio) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No existe el Servicio' });
         }
 
@@ -76,7 +76,7 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const colaboradores = await Colaborador.find({ category: dbServicio.category }).select('_id fullnames morshift aftshift date hour service listHd').lean();
 
-        await db.disconnect();
+
 
         const newColab: ICola[] = [];
 
@@ -112,7 +112,7 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 
     } catch (error) {
         console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte a CinCout, no se pudor cargar los horarios'
         })
@@ -144,7 +144,7 @@ const updateHora = async (req: NextApiRequest, res: NextApiResponse) => {
 
 
         if (!dbOrder) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No existe la orden' });
         }
 
@@ -180,16 +180,16 @@ const updateHora = async (req: NextApiRequest, res: NextApiResponse) => {
 
         await db.checkConnection();
 
-        await dbOrder.updateOne({
-            date: newDates,
-            listHd: newLisths,
-        })
+        dbOrder.date = newDates;
+        dbOrder.listHd = newLisths;
+
+        dbOrder.save();
 
         res.status(200).json({ message: 'ok' });
 
     } catch (error) {
         console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte a CinCout, no se puedo actualizar la hora'
         })
@@ -223,7 +223,7 @@ const deleteHora = async (req: NextApiRequest, res: NextApiResponse) => {
         const dbOrder = await Colaborador.findById({ _id: id })
 
         if (!dbOrder) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No existe la orden' });
         }
 
@@ -236,16 +236,16 @@ const deleteHora = async (req: NextApiRequest, res: NextApiResponse) => {
 
         await db.checkConnection();
 
-        await dbOrder.updateOne({
-            date: newDates,
-            listHd: filter,
-        })
+        dbOrder.date = newDates;
+        dbOrder.listHd = filter;
+
+        dbOrder.save();
 
         res.status(200).json({ message: 'ok' });
 
     } catch (error) {
         console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte a CinCout, no se pudo eliminar la hora'
         })
@@ -277,7 +277,7 @@ const addHora = async (req: NextApiRequest, res: NextApiResponse) => {
         })
 
         if (existeHour) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'Hora ya registrada' });
         }
 
@@ -291,19 +291,19 @@ const addHora = async (req: NextApiRequest, res: NextApiResponse) => {
             const newAff = cola?.aftshift;
             newAff?.push({ hour: hora, estate: false })
             await cola?.updateOne({ aftshift: newAff })
-            await db.disconnect();
+
             return res.status(200).json({ message: 'ok' });
         }
 
         const newMor = cola?.morshift;
         newMor?.push({ hour: hora, estate: false })
         await cola?.updateOne({ morshift: newMor })
-        await db.disconnect();
+
         res.status(200).json({ message: 'ok' });
 
     } catch (error) {
         console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte a CinCout, no se pudo agregar la hora'
         })

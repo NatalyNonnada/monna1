@@ -69,23 +69,20 @@ const updateServicios = async (req: NextApiRequest, res: NextApiResponse) => {
         const dbOrder = await Colaborador.findById({ _id: id })
 
         if (!dbOrder) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No existe el colaborador' });
         }
 
         await db.checkConnection();
 
-        await dbOrder.updateOne({
-            category: lstservicios
-        });
-
-        await db.disconnect();
+        dbOrder.category = lstservicios;
+        dbOrder.save();
 
         res.status(200).json({ message: 'ok' });
 
     } catch (error) {
         console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte a CinCout, no se pudo actualizar el servicio'
         })

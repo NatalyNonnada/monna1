@@ -12,13 +12,6 @@ interface datar {
     finPago: string;
 }
 
-interface ListHdItem {
-    fecha: string;
-    hora: string;
-    servicio: string;
-    _id?: string;
-}
-
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     switch (req.method) {
@@ -48,7 +41,7 @@ const confirmReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         const dbReserva = await Reserva.findById({ _id: id });
 
         if (!dbReserva) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No existe la reserva' });
         }
 
@@ -62,7 +55,7 @@ const confirmReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200).json(dbReserva);
 
     } catch (error) {
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte con CinCout. No ser pudo confirmar la reserva'
         })
@@ -95,18 +88,15 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
                     cola.date = newDate;
 
                     await cola.save();
-                    await Reserva.deleteOne({ _id: da._id }); // Asegúrate de que idReserva esté definido
+
+                    await Reserva.deleteOne({ _id: da._id || idReserva });
                 }
             }
         }));
 
-        await db.disconnect();
-
         res.status(200).json({ message: 'ok' });
 
     } catch (error) {
-        console.log(error);
-        await db.disconnect();
         res.status(400).json({
             message: 'contacte con el CinCout, no se puedo finalizar la reserva'
         })

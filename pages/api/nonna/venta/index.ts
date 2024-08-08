@@ -35,13 +35,9 @@ const getVenta = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const reservas = await Venta.find();
 
-        await db.disconnect();
-
         res.status(200).json(reservas);
 
     } catch (error) {
-        console.log(error);
-        await db.disconnect();
         res.status(400).json({
             message: 'contacte a CinCout, no se pudor cargar los departametos'
         })
@@ -83,10 +79,10 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
         await db.checkConnection();
 
         //verificamos si existe la orden
-        const dbOrden = await Order.findById({ _id: orden }).populate('Servicio').lean();
+        const dbOrden = await Order.findById({ _id: orden }).populate('Servicio');
 
         if (!dbOrden) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No existe la orden' });
         }
 
@@ -98,13 +94,13 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
         //verificamos si existe el servicio solicitado
         const dbServicio = await Servicio.findById({ _id: servicr._id?.toString() });
         if (!dbServicio) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No existe el servicio' });
         }
 
         //verficamos si el monto de reserva es el correcto
         if (careserva < dbServicio.reser) {
-            await db.disconnect();
+
             return res.status(400).json({ message: `Para confirmar la reserva el monto tiene que ser igual o mayor a S/${dbServicio.reser}` });
         }
 
@@ -112,7 +108,7 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
         //verificamos si existe el colaborador solicitado
         const dbColaborador = await Colaborador.findById({ _id: colaborador });
         if (!dbColaborador) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No existe el colaborador' });
         }
 
@@ -123,7 +119,7 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
         const existTta = dbColaborador.aftshift.find(p => p._id?.toString() === hora.toString());
 
         if (existTma && existTta) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'Hora no valida' });
         }
 
@@ -132,7 +128,7 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
         const obDate = dbColaborador.date.find(a => a === newCode);
 
         if (obDate !== undefined) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'El colaborador esta ocupada para la hora y fecha' });
         }
 
@@ -143,7 +139,7 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
 
             if (dbReserva !== null) {
                 if (dbReserva.nureserva !== 0) {
-                    await db.disconnect();
+
                     return res.status(400).json({ message: `El número de operación: ${nureserva} ya esta registrado` });
                 }
             }
@@ -204,24 +200,19 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const cola = await Colaborador.findById({ _id: colaborador });
 
-        await cola?.updateOne({
-            date: newDates,
-            listHd: newDateHo,
-            hour: `${dbOrden.date} ${existTma?.hour || existTta?.hour}`
-        })
+        if (cola) {
+            cola.date = newDates;
+            cola.listHd = newDateHo;
+        }
+
+        cola?.save();
 
         //Eliminamos la orden
-        const orde = await Order.findById({ _id: orden });
-
-        await orde?.deleteOne()
-
-        await db.disconnect();
+        await Order.deleteOne({ _id: orden });
 
         res.status(200).json('newReserva');
 
     } catch (error) {
-        console.log(error);
-        await db.disconnect();
         res.status(400).json({
             message: 'contacte con el admin'
         })

@@ -212,20 +212,16 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         let newDateHo = dbColaborador.listHd;
         newDateHo.push({ fecha: `${dbOrden.date}`, hora: `${existTma?.hour || existTta?.hour}`, servicio: dbServicio.title })
 
-        await db.checkConnection();
-
         const cola = await Colaborador.findById({ _id: colaborador });
 
-        await cola?.updateOne({
-            date: newDates,
-            listHd: newDateHo,
-            hour: `${dbOrden.date} ${existTma?.hour || existTta?.hour}`
-        })
+        if (cola) {
+            cola.date = newDates;
+            cola.listHd = newDateHo;
+            cola?.save();
+        }
 
         //Eliminamos la orden
-        const orde = await Order.findById({ _id: orden });
-
-        await orde?.deleteOne()
+        await Order.deleteOne({ _id: orden });
 
         await db.disconnect();
 

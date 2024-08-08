@@ -29,13 +29,13 @@ const getOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const Orderes = await Order.find().populate('Servicio')
 
-        await db.disconnect();
+
 
         res.status(200).json(Orderes);
 
     } catch (error) {
         console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte a CinCout, no se pudor cargar la orden'
         })
@@ -56,18 +56,16 @@ const updateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         const dbOrder = await Order.findOne({ _id });
 
         if (!dbOrder) {
-            await db.disconnect();
             return res.status(400).json({ message: 'No existe el Order' });
         }
 
         await dbOrder.save();
-        await db.disconnect();
 
         res.status(200).json(dbOrder);
 
     } catch (error) {
         console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte con CinCout, no se puedo actualizar la orden'
         })
@@ -85,20 +83,18 @@ const deleteOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         const dbOrder = await Order.findById(_id);
 
         if (!dbOrder) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No existe el Order' });
         }
 
         await db.checkConnection();
 
-        await dbOrder.deleteOne({ _id })
-
-        await db.disconnect();
+        await Order.deleteOne({ _id: _id })
 
         res.status(200).json({ message: 'ok' });
 
     } catch (error) {
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte a CinCout, no se puedo eliminar la orden'
         })

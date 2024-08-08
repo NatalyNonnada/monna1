@@ -25,8 +25,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         Colaborador.countDocuments(),
     ]);
 
-    await db.disconnect();
-
     res.status(200).json({
         numberOfReservas,
         paidOrders,

@@ -16,17 +16,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 const getServicio = async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
-        await db.checkConnection();
+        await db.connect();
 
         const Servicios = await Servicio.find({ category: 'Adicionales' }).select('_id price title category').lean();
-
-        await db.disconnect();
 
         res.status(200).json(Servicios);
 
     } catch (error) {
         console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte a CinCout, no se pudor cargar los servicios'
         })
