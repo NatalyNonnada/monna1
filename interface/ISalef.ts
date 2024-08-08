@@ -10,7 +10,6 @@ interface Items {
 }
 
 export interface ISalef {
-
     servicios: Items[];
     idReserva: string;
     createdAt?: string;

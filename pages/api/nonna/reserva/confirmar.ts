@@ -77,12 +77,13 @@ const confirmReserva = async (req: NextApiRequest, res: NextApiResponse) => {
 const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
 
-        const { servicios } = req.body as ISalef;
+        const { servicios, idReserva } = req.body as ISalef;
 
         if (servicios.length <= 0) {
             return res.status(400).json({ message: 'Faltan servicios' });
         }
 
+        console.log({ idReserva })
         await db.checkConnection();
 
         servicios.map(async da => {
@@ -91,7 +92,7 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
 
                 const cod = `${da.codigo}${da.hora}`.replace(/\s+/g, '')
 
-                const cola = await Colaborador.findById({ _id: da.cola }).lean();
+                const cola = await Colaborador.findById({ _id: da.cola });
 
                 if (cola) {
 
@@ -103,7 +104,8 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
 
                     await cola.save();
 
-                    await Reserva.deleteOne({ _id: da._id?.toString() });
+
+                    await Reserva.deleteOne({ _id: idReserva });
 
                 }
             }
