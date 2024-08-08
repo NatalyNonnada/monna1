@@ -19,7 +19,6 @@ export const getReservaById = async (id: string): Promise<IReserva | null> => {
 
         const reserva = await Reserva.findById({ _id: id }).populate('colaborador');
 
-        await db.disconnect();
         if (!reserva) {
             return null;
         }

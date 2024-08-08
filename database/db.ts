@@ -17,8 +17,6 @@ export const connect = async () => {
             if (mongoConnection.isConnected === 1) {
                 return;
             }
-
-            await mongoose.disconnect();
         }
 
         await mongoose.connect(`${process.env.MONGO_URL}` || '');
@@ -26,22 +24,6 @@ export const connect = async () => {
 
     } catch (error) {
         console.log('dd')
-    }
-}
-
-export const disconnect = async () => {
-
-    try {
-        if (process.env.NODE_ENV === 'development') return;
-
-        if (mongoConnection.isConnected === 0) return;
-
-        await mongoose.disconnect();
-        mongoConnection.isConnected = 0;
-
-        console.log('Desconectado');
-    } catch (error) {
-        console.log('eee')
     }
 }
 

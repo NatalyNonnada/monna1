@@ -26,8 +26,6 @@ const getOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const orden = await Order.findById({ _id: id }).populate('Servicio');
 
-
-
         res.status(200).json(orden);
 
     } catch (error) {
@@ -61,8 +59,6 @@ const deleteOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         await db.checkConnection();
 
         await dbOrder.deleteOne({ _id: id })
-
-
 
         res.status(200).json({ message: 'ok' });
 

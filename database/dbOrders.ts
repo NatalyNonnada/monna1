@@ -36,7 +36,6 @@ export const getOrderById = async (id: string): Promise<IOrder | null> => {
 
         const orden = await Order.findById({ _id: id }).populate('Servicio')
 
-        await db.disconnect();
         if (!orden) {
             return null;
         }

@@ -19,7 +19,6 @@ export const getColaById = async (id: string): Promise<IColaborador | null> => {
 
         const colabora = await Colaborador.findById({ _id: id }).lean();
 
-        await db.disconnect();
         if (!colabora) {
             return null;
         }

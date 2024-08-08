@@ -22,20 +22,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
 const getOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
-
     try {
 
         await db.connect();
 
-        const Orderes = await Order.find().populate('Servicio')
-
-
+        const Orderes = await Order.find().populate('Servicio').lean();
 
         res.status(200).json(Orderes);
 
     } catch (error) {
         console.log(error);
-
         res.status(400).json({
             message: 'contacte a CinCout, no se pudor cargar la orden'
         })
