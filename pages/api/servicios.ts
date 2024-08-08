@@ -21,13 +21,13 @@ const getServicios = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const servicios = await Servicio.find({ estado: true }, { createdAt: 0, updatedAt: 0, reser: 0 });
 
-        await db.disconnect();
+
 
         res.status(200).json(servicios);
 
     } catch (error) {
         console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte a monna'
         })

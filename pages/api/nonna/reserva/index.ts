@@ -51,7 +51,7 @@ const getReservas = async (req: NextApiRequest, res: NextApiResponse) => {
 
     } catch (error) {
         console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte a CinCout, no se pudo cargar las reservas'
         })
@@ -96,7 +96,7 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         const dbOrden = await Order.findById({ _id: orden }).populate('Servicio').lean();
 
         if (!dbOrden) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No existe la orden' });
         }
 
@@ -109,12 +109,12 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         const dbServicio = await Servicio.findById({ _id: servicr._id?.toString() });
 
         if (!dbServicio) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No existe el servicio' });
         }
 
         if (careserva < dbServicio.reser) {
-            await db.disconnect();
+
             return res.status(400).json({ message: `Para confirmar la reserva el monto tiene que ser igual o mayor a S/${dbServicio.reser}` });
         }
 
@@ -122,7 +122,7 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const dbColaborador = await Colaborador.findById({ _id: colaborador });
         if (!dbColaborador) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'No existe el colaborador' });
         }
 
@@ -133,7 +133,7 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         const existTta = dbColaborador.aftshift.find(p => p._id?.toString() === hora.toString());
 
         if (existTma && existTta) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'Hora no valida' });
         }
 
@@ -142,7 +142,7 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         const obDate = dbColaborador.date.find(a => a === newCode);
 
         if (obDate !== undefined) {
-            await db.disconnect();
+
             return res.status(400).json({ message: 'El colaborador esta ocupada para la hora y fecha' });
         }
 
@@ -153,7 +153,7 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
 
             if (dbReserva !== null) {
                 if (dbReserva.nureserva !== 0) {
-                    await db.disconnect();
+
                     return res.status(400).json({ message: `El número de operación: ${nureserva} ya esta registrado` });
                 }
             }
@@ -223,13 +223,13 @@ const createReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         //Eliminamos la orden
         await Order.deleteOne({ _id: orden });
 
-        await db.disconnect();
+
 
         res.status(200).json('newReserva');
 
     } catch (error) {
         console.log(error);
-        await db.disconnect();
+
         res.status(400).json({
             message: 'contacte con CinCout. No ser puedo crear la reserva'
         })
