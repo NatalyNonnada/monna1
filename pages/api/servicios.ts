@@ -17,11 +17,9 @@ const getServicios = async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
 
-        await db.checkConnection();
+        await db.connect();
 
         const servicios = await Servicio.find({ estado: true }, { createdAt: 0, updatedAt: 0, reser: 0 });
-
-
 
         res.status(200).json(servicios);
 

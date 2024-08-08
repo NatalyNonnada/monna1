@@ -16,6 +16,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 const getServicio = async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
+
         await db.connect();
 
         const Servicios = await Servicio.find({ category: 'Adicionales' }).select('_id price title category').lean();

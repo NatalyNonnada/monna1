@@ -50,7 +50,7 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Orden no válida' });
         }
 
-        await db.checkConnection();
+        await db.connect();
 
         const dbOrder = await Order.findOne({ _id: id }).populate('Servicio').lean();
 
@@ -63,7 +63,6 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             ...dbOrder.Servicio as unknown as Iservicio
         };
 
-        await db.checkConnection();
 
         const dbServicio = await Servicio.findOne({ _id: servicr._id?.toString() });
 
@@ -72,11 +71,8 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'No existe el Servicio' });
         }
 
-        await db.checkConnection();
 
         const colaboradores = await Colaborador.find({ category: dbServicio.category }).select('_id fullnames morshift aftshift date hour service listHd').lean();
-
-
 
         const newColab: ICola[] = [];
 
@@ -112,7 +108,6 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 
     } catch (error) {
         console.log(error);
-
         res.status(400).json({
             message: 'contacte a CinCout, no se pudor cargar los horarios'
         })

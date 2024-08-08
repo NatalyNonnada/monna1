@@ -11,7 +11,7 @@ type Data = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 
-    await db.checkConnection();
+    await db.connect();
 
     const [
         numberOfReservas,
