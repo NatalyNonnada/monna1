@@ -61,12 +61,9 @@ const confirmReserva = async (req: NextApiRequest, res: NextApiResponse) => {
 
         await dbReserva.save();
 
-        await db.disconnect();
-
         res.status(200).json(dbReserva);
 
     } catch (error) {
-        console.log(error);
         await db.disconnect();
         res.status(400).json({
             message: 'contacte con CinCout. No ser pudo confirmar la reserva'

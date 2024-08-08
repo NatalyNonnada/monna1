@@ -47,8 +47,6 @@ const getReservas = async (req: NextApiRequest, res: NextApiResponse) => {
             select: 'fullnames _id'
         }).select('_id colaborador shoppingAddress servicio hora fecha total careserva nureserva iniPago isPaid cafinal finPago nufinal');
 
-        await db.disconnect();
-
         res.status(200).json(reservas);
 
     } catch (error) {
