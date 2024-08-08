@@ -57,8 +57,6 @@ const confirmReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         dbReserva.cafinal = dbReserva.total;
         dbReserva.finPago = dbReserva.iniPago;
 
-        await db.checkConnection();
-
         await dbReserva.save();
 
         res.status(200).json(dbReserva);
