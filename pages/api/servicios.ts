@@ -25,7 +25,6 @@ const getServicios = async (req: NextApiRequest, res: NextApiResponse) => {
 
     } catch (error) {
         console.log(error);
-
         res.status(400).json({
             message: 'contacte a monna'
         })
