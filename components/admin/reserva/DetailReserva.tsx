@@ -96,40 +96,45 @@ export const DetailReserva = ({ reserva }: Props) => {
     }, [reserva])
 
     const generatePDF = async () => {
-        const element = document.getElementById('receipt-content');
-        const fechacon = document.getElementById('fecha-content') as HTMLElement;
-        const titleCell = document.getElementsByClassName('tablefon') as HTMLCollectionOf<HTMLElement>;
+        try {
+            const element = document.getElementById('receipt-content');
+            const fechacon = document.getElementById('fecha-content') as HTMLElement;
+            const titleCell = document.getElementsByClassName('tablefon') as HTMLCollectionOf<HTMLElement>;
 
-        fechacon.style.marginTop = "250px";
-        for (var i = 0; i < titleCell.length; i++) {
-            titleCell[i].classList.add('nueva-clase');
+            fechacon.style.marginTop = "250px";
+            for (var i = 0; i < titleCell.length; i++) {
+                titleCell[i].classList.add('nueva-clase');
+            }
+
+            if (element) {
+                const canvas = await html2canvas(element, { scale: 4 });
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: [80, 80]
+                });
+
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+                const logoUrl = '/logo-monna.png';
+                const logoImg = new Image();
+                logoImg.src = logoUrl;
+                logoImg.onload = () => {
+                    pdf.addImage(logoImg, 'PNG', 15, 1, 50, 15);
+                    pdf.save('receipt.pdf');
+                };
+            }
+
+            clearVenta();
+        } catch (error) {
+            console.error('Error generating PDF:', error);
         }
+    };
 
-        if (element) {
-            const canvas = await html2canvas(element, { scale: 4 });
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: [80, 80]
-            });
-
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-
-            const logoUrl = '/logo-monna.png';
-            const logoImg = new Image();
-            logoImg.src = logoUrl;
-            logoImg.onload = () => {
-                pdf.addImage(logoImg, 'PNG', 15, 1, 50, 15);
-                pdf.save('receipt.pdf');
-            };
-        }
-
-        clearVenta();
-    }
 
     const handleFin = async () => {
         if (subTotalg > 0) {

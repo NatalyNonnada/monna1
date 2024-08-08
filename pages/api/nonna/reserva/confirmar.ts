@@ -12,6 +12,12 @@ interface datar {
     finPago: string;
 }
 
+interface ListHdItem {
+    fecha: string;
+    hora: string;
+    servicio: string;
+    _id?: string;
+}
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -77,37 +83,33 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Faltan servicios' });
         }
 
+        await db.checkConnection();
 
         servicios.map(async da => {
 
             if (da.codigo !== '-') {
 
                 const cod = `${da.codigo}${da.hora}`.replace(/\s+/g, '')
-                await db.checkConnection();
-                const cola = await Colaborador.findById({ _id: da.cola }).select('_id fullnames date listHd');
-                const dbReserva = await Reserva.findById({ _id: da._id?.toString() });
 
-                if (cola && dbReserva) {
+                const cola = await Colaborador.findById({ _id: da.cola }).lean();
 
-                    const newHd = cola.listHd.filter(p => !(p.fecha.toString() === da.codigo && p.hora.toString() === da.hora.toString()))
+                if (cola) {
+
+                    const newHd = cola.listHd.filter(p => !(p.fecha.toString() === da.codigo && p.hora.toString() === da.hora.toString()));
                     const newDate = cola.date.filter(p => p !== cod);
 
-                    await db.checkConnection();
+                    cola.listHd = newHd;
+                    cola.date = newDate;
 
-                    await cola.updateOne({
-                        listHd: newHd,
-                        date: newDate
-                    })
+                    await cola.save();
+
+                    await Reserva.deleteOne({ _id: da._id?.toString() });
 
                 }
             }
         })
 
-        servicios.forEach(async da => {
-            await db.checkConnection();
-            const dbReserva = await Reserva.findById({ _id: da._id?.toString() });
-            await dbReserva?.deleteOne({ _id: da._id?.toString() })
-        })
+
 
         await db.disconnect();
 

@@ -2,6 +2,14 @@ import { IHour } from '../interface';
 import mongoose, { Schema, Document, model } from 'mongoose';
 import { Model } from 'mongoose';
 
+interface ListHdItem {
+    fecha: string;
+    hora: string;
+    servicio: string;
+    _id?: string;
+}
+
+
 interface IColaborador extends Document {
     _id: string;
     fullnames: string;
@@ -10,7 +18,7 @@ interface IColaborador extends Document {
     category: string[];
     state: boolean;
     date: string[];
-    listHd: [{ fecha: string, hora: string, servicio: string, _id?: string }];
+    listHd: ListHdItem[];
     createdAt?: string;
     updatedAt?: string;
 }
