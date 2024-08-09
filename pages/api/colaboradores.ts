@@ -9,7 +9,7 @@ import { Categ } from './nonna/colaborador/servicios';
 
 
 function isValidCateg(value: any): value is Categ {
-    return ['Acrílicas', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'].includes(value);
+    return ['Acrílicas', 'Promo del mes', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'].includes(value);
 }
 
 const zoneTimea = () => {

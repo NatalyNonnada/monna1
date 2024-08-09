@@ -21,7 +21,7 @@ const servicioSchema = new Schema({
     category: {
         type: String,
         enum: {
-            values: ['Acrílicas', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'],
+            values: ['Acrílicas', 'Promo del mes', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'],
             message: '{VALUE} no es un categoria válida'
         }
     },

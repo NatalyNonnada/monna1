@@ -6,7 +6,7 @@ import { isValidObjectId } from 'mongoose';
 import { Categ } from './colaborador/servicios';
 
 function isValidCateg(value: any): value is Categ {
-    return ['Acrílicas', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'].includes(value);
+    return ['Acrílicas', 'Promo del mes', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'].includes(value);
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {

@@ -6,7 +6,7 @@ import { isValidObjectId } from 'mongoose';
 export type Categ = 'Acrílicas' | 'Manicure' | 'Pedicure' | 'Cejas' | 'Pestañas' | 'Adicionales'
 
 function isValidCateg(value: any): value is Categ {
-    return ['Acrílicas', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'].includes(value);
+    return ['Acrílicas', 'Promo del mes', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'].includes(value);
 }
 
 interface bodyre {

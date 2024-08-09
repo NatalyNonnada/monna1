@@ -144,12 +144,7 @@ export const DetailReserva = ({ reserva }: Props) => {
         try {
             const element = document.getElementById('receipt-content');
             const fechacon = document.getElementById('fecha-content') as HTMLElement;
-            const titleCell = document.getElementsByClassName('tablefon') as HTMLCollectionOf<HTMLElement>;
-
-            fechacon.style.marginTop = "230px";
-            for (var i = 0; i < titleCell.length; i++) {
-                titleCell[i].classList.add('nueva-clase');
-            }
+            fechacon.style.marginTop = "200px";
 
             if (element) {
                 const canvas = await html2canvas(element, { scale: 4 });
@@ -185,7 +180,7 @@ export const DetailReserva = ({ reserva }: Props) => {
                 const logoImg = new Image();
                 logoImg.src = logoUrl;
                 logoImg.onload = () => {
-                    pdf.addImage(logoImg, 'PNG', 15, 10, 50, 15);
+                    pdf.addImage(logoImg, 'PNG', 15, 5, 50, 15);
                     pdf.save('receipt.pdf');
                 };
             }

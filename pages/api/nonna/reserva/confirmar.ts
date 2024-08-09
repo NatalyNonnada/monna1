@@ -2,8 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '../../../../database';
 import { Boleta, Colaborador, Reserva } from '../../../../model';
 import { isValidObjectId } from 'mongoose';
-import { IBoleta, ISalef } from '../../../../interface';
-import { initFecha } from '@/utils';
+import { ISalef } from '../../../../interface';
 
 
 interface datar {
@@ -109,6 +108,7 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200).json({ message: 'ok' });
 
     } catch (error) {
+        console.log(error);
         res.status(400).json({
             message: 'contacte con el CinCout, no se puedo finalizar la reserva'
         })
