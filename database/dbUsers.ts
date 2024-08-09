@@ -5,7 +5,7 @@ import { User } from '../model';
 export const checkUserEmailPassword = async (email: string, password: string) => {
 
     try {
-        await db.connect();
+        await db.checkConnection();
         const user = await User.findOne({ email });
 
         if (!user) {

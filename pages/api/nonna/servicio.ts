@@ -67,15 +67,13 @@ const updateServicio = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Categoria no valida' });
         }
 
-        await db.checkConnection();
-
         dbServicio.title = title;
         dbServicio.price = price;
         dbServicio.description = description;
         dbServicio.category = category;
         dbServicio.estado = estado;
 
-        dbServicio.save();
+        await dbServicio.save();
 
         res.status(200).json(dbServicio);
 
@@ -91,7 +89,7 @@ const createServicio = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const { title, category } = req.body as Iservicio;
 
-        await db.connect();
+        await db.checkConnection();
 
         const dbServicio = await Servicio.findOne({ title });
 

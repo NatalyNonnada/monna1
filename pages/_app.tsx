@@ -8,20 +8,23 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import { SessionProvider } from "next-auth/react";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <UiProvider>
-      <CartProvider>
-        <NonnaProvider>
-          <SaleProvider>
-            <ThemeProvider theme={lightTheme}>
-              <CssBaseline />
-              <Component {...pageProps} />
-            </ThemeProvider>
-          </SaleProvider>
-        </NonnaProvider>
-      </CartProvider>
-    </UiProvider>
+    <SessionProvider>
+      <UiProvider>
+        <CartProvider>
+          <NonnaProvider>
+            <SaleProvider>
+              <ThemeProvider theme={lightTheme}>
+                <CssBaseline />
+                <Component {...pageProps} />
+              </ThemeProvider>
+            </SaleProvider>
+          </NonnaProvider>
+        </CartProvider>
+      </UiProvider>
+    </SessionProvider>
   )
 }

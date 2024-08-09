@@ -19,7 +19,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
 const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 
-
     try {
 
         await db.checkConnection();
@@ -29,8 +28,6 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200).json(colaboradores);
 
     } catch (error) {
-        console.log(error);
-
         res.status(400).json({
             message: 'contacte a CinCout, no se pudor cargar al colaborador'
         })
@@ -54,16 +51,11 @@ const createColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const newColaborador = new Colaborador({ ...req.body, date: [], hour: '', service: '', listHd: [], state: true });
 
-        await db.checkConnection();
-
         await newColaborador.save();
-
 
         res.status(200).json({ newDoc: newColaborador });
 
     } catch (error) {
-        console.log(error);
-
         res.status(400).json({
             message: 'contacte con CinCout, no se puedo registrar'
         })

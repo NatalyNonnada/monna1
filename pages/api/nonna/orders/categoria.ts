@@ -29,8 +29,6 @@ const getOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200).json(orden);
 
     } catch (error) {
-        console.log(error);
-
         res.status(400).json({
             message: 'contacte a CinCout, no se pudor cargar los departametos'
         })
@@ -56,15 +54,12 @@ const deleteOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
             return res.status(400).json({ message: 'No existe la orden' });
         }
-        await db.checkConnection();
 
         await dbOrder.deleteOne({ _id: id })
 
         res.status(200).json({ message: 'ok' });
 
     } catch (error) {
-        console.log(error);
-
         res.status(400).json({
             message: 'contacte a CinCout, no se pudo eliminar la orden'
         })

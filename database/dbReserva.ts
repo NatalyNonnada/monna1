@@ -15,7 +15,7 @@ export const getReservaById = async (id: string): Promise<IReserva | null> => {
             return null;
         }
 
-        await db.connect();
+        await db.checkConnection();
 
         const reserva = await Reserva.findById({ _id: id }).populate('colaborador');
 

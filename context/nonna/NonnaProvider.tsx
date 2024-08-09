@@ -86,10 +86,14 @@ export const NonnaProvider: FC<Props> = ({ children }) => {
         return;
     }
 
+    const clearAllNona = () => {
+        dispatch({ type: '[Clear] - Nona' });
+    }
+
     return (
         <NonnaContext.Provider value={{
             ...state,
-            // Methods
+            clearAllNona,
             setContrib,
             setService,
             setLoading

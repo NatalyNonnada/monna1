@@ -8,12 +8,12 @@ type NonnaActionType =
     | { type: '[Calab] - Edit colaborado', payload: IColaborador }
     | { type: '[Calab] - Remove colaborado', payload: IColaborador }
     | { type: '[Calab] - View colaborador', payload: IColaborador }
-
     | { type: '[Servi] - Load servicios', payload: Iservicio[] }
     | { type: '[Servi] - New servicio', payload: Iservicio }
     | { type: '[Servi] - Edit servicio', payload: Iservicio }
     | { type: '[Servi] - Remove servicio', payload: Iservicio }
     | { type: '[Servi] - View servicio', payload: Iservicio }
+    | { type: '[Clear] - Nona' }
 
 export const nonnaReducer = (state: NonnaState, action: NonnaActionType): NonnaState => {
 
@@ -68,7 +68,6 @@ export const nonnaReducer = (state: NonnaState, action: NonnaActionType): NonnaS
                 ...state,
                 seleContrib: { ...action.payload }
             }
-        //Servicios
         case '[Servi] - Load servicios':
             return {
                 ...state,
@@ -110,6 +109,15 @@ export const nonnaReducer = (state: NonnaState, action: NonnaActionType): NonnaS
             return {
                 ...state,
                 seleService: { ...action.payload }
+            }
+        case '[Clear] - Nona':
+            return {
+                ...state,
+                isLoaded: false,
+                seleService: undefined,
+                seleContrib: undefined,
+                listService: [],
+                listContrib: [],
             }
         default:
             return state

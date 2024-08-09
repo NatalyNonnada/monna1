@@ -13,7 +13,6 @@ const esNumero = (valor: any): boolean => {
     return !isNaN(numero);
 }
 
-
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     switch (req.method) {
@@ -58,16 +57,14 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'El numero de operación no es valida' });
         }
 
-
-        //validamos el colaborador ID
         if (!isValidObjectId(colaborador)) {
             return res.status(400).json({ message: 'Colaborador no válido' });
         }
-        //validamos la orden ID
+
         if (!isValidObjectId(orden)) {
             return res.status(400).json({ message: 'Orden no válido' });
         }
-        //validamos de la hora ID
+
         if (!isValidObjectId(hora)) {
             return res.status(400).json({ message: 'Hora no válida' });
         }
@@ -78,7 +75,6 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
 
         await db.checkConnection();
 
-        //verificamos si existe la orden
         const dbOrden = await Order.findById({ _id: orden }).populate('Servicio');
 
         if (!dbOrden) {
@@ -90,30 +86,24 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
             ...dbOrden.Servicio as unknown as Iservicio
         };
 
-        await db.checkConnection();
-        //verificamos si existe el servicio solicitado
+
         const dbServicio = await Servicio.findById({ _id: servicr._id?.toString() });
         if (!dbServicio) {
 
             return res.status(400).json({ message: 'No existe el servicio' });
         }
 
-        //verficamos si el monto de reserva es el correcto
         if (careserva < dbServicio.reser) {
 
             return res.status(400).json({ message: `Para confirmar la reserva el monto tiene que ser igual o mayor a S/${dbServicio.reser}` });
         }
 
-        await db.checkConnection();
-        //verificamos si existe el colaborador solicitado
+
         const dbColaborador = await Colaborador.findById({ _id: colaborador });
         if (!dbColaborador) {
 
             return res.status(400).json({ message: 'No existe el colaborador' });
         }
-
-        //verificamos que el colaborador este disponible
-        // para la fecha  y hora solicitada existe
 
         const existTma = dbColaborador.morshift.find(p => p._id?.toString() === hora.toString());
         const existTta = dbColaborador.aftshift.find(p => p._id?.toString() === hora.toString());
@@ -132,8 +122,6 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'El colaborador esta ocupada para la hora y fecha' });
         }
 
-        await db.checkConnection();
-        //verficamos si el numero de operacion existe
         if (nureserva !== 0) {
             const dbReserva = await Reserva.findOne({ nureserva: nureserva });
 
@@ -179,21 +167,10 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
             finPago: controlTip,
         })
 
-        await db.checkConnection();
-
         await newReserva.save();
 
-        //una ves registrado
-
-        //Actualizamos colaborador
-
-
-        //agregamos las fechas para el control del admin
         let newDates = dbColaborador.date;
         newDates.push(newCode)
-
-        //agregamos las fechas para filtral las fechas y horas disponibles 
-        //para los usuarios
 
         let newDateHo = dbColaborador.listHd;
         newDateHo.push({ fecha: `${dbOrden.date}`, hora: `${existTma?.hour || existTta?.hour}`, servicio: dbServicio.title })
@@ -203,11 +180,10 @@ const createVenta = async (req: NextApiRequest, res: NextApiResponse) => {
         if (cola) {
             cola.date = newDates;
             cola.listHd = newDateHo;
+            await cola.save();
         }
 
-        cola?.save();
 
-        //Eliminamos la orden
         await Order.deleteOne({ _id: orden });
 
         res.status(200).json('newReserva');

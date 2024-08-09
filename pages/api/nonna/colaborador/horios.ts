@@ -4,7 +4,6 @@ import { IHour, Iservicio } from '../../../../interface';
 import { Colaborador, Order, Servicio } from '../../../../model';
 import { isValidObjectId } from 'mongoose';
 
-
 interface Infechas {
     fecha: string;
     horas: string[];
@@ -35,7 +34,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 }
 
-
 const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
@@ -50,7 +48,7 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Orden no válida' });
         }
 
-        await db.connect();
+        await db.checkConnection();
 
         const dbOrder = await Order.findOne({ _id: id }).populate('Servicio').lean();
 
@@ -70,7 +68,6 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
 
             return res.status(400).json({ message: 'No existe el Servicio' });
         }
-
 
         const colaboradores = await Colaborador.find({ category: dbServicio.category }).select('_id fullnames morshift aftshift date hour service listHd').lean();
 
@@ -107,7 +104,6 @@ const getColaborador = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200).json(newColab.filter(a => a !== undefined));
 
     } catch (error) {
-        console.log(error);
         res.status(400).json({
             message: 'contacte a CinCout, no se pudor cargar los horarios'
         })
@@ -173,18 +169,14 @@ const updateHora = async (req: NextApiRequest, res: NextApiResponse) => {
         });
 
 
-        await db.checkConnection();
-
         dbOrder.date = newDates;
         dbOrder.listHd = newLisths;
 
-        dbOrder.save();
+        await dbOrder.save();
 
         res.status(200).json({ message: 'ok' });
 
     } catch (error) {
-        console.log(error);
-
         res.status(400).json({
             message: 'contacte a CinCout, no se puedo actualizar la hora'
         })
@@ -229,18 +221,14 @@ const deleteHora = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const newDates = dbOrder.date.filter(p => p !== newCode);
 
-        await db.checkConnection();
-
         dbOrder.date = newDates;
         dbOrder.listHd = filter;
 
-        dbOrder.save();
+        await dbOrder.save();
 
         res.status(200).json({ message: 'ok' });
 
     } catch (error) {
-        console.log(error);
-
         res.status(400).json({
             message: 'contacte a CinCout, no se pudo eliminar la hora'
         })
@@ -278,27 +266,26 @@ const addHora = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const simb = `${hora}`.includes('pm')
 
-        await db.checkConnection();
-
         const cola = await Colaborador.findById({ _id: id });
 
-        if (simb) {
+        if (simb && cola) {
             const newAff = cola?.aftshift;
             newAff?.push({ hour: hora, estate: false })
-            await cola?.updateOne({ aftshift: newAff })
-
+            cola.aftshift = newAff;
+            await cola.save();
             return res.status(200).json({ message: 'ok' });
         }
 
-        const newMor = cola?.morshift;
-        newMor?.push({ hour: hora, estate: false })
-        await cola?.updateOne({ morshift: newMor })
+        if (cola) {
+            const newMor = cola?.morshift;
+            newMor.push({ hour: hora, estate: false })
+            cola.morshift = newMor;
+            await cola.save();
+        }
 
         res.status(200).json({ message: 'ok' });
 
     } catch (error) {
-        console.log(error);
-
         res.status(400).json({
             message: 'contacte a CinCout, no se pudo agregar la hora'
         })

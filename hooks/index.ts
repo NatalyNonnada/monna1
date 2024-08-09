@@ -7,3 +7,4 @@ export * from './useOrder';
 export * from './useDashboard';
 export * from './useReserva';
 export * from './useVenta';
+export * from './useClear';

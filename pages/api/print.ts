@@ -27,7 +27,6 @@ const getBoleta = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200).json(boletas);
 
     } catch (error) {
-        console.log(error);
         res.status(400).json({
             message: 'contacte a CinCout, no se pudor cargar la orden'
         })
@@ -40,15 +39,15 @@ const deleteBoleta = async (req: NextApiRequest, res: NextApiResponse) => {
 
         await db.checkConnection();
 
-        const _id = (req.query.id as string) || '';
+        const { id } = req.query;
 
-        const dbOrder = await Boleta.findById(_id);
+        const dbOrder = await Boleta.findById({ _id: id });
 
         if (!dbOrder) {
             return res.status(400).json({ message: 'No existe la boleta' });
         }
 
-        await Boleta.deleteOne({ _id: _id })
+        await Boleta.deleteOne({ _id: id })
 
         res.status(200).json({ message: 'ok' });
 

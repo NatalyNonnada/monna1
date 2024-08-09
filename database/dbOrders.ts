@@ -32,7 +32,7 @@ export const getOrderById = async (id: string): Promise<IOrder | null> => {
             return null;
         }
 
-        await db.connect();
+        await db.checkConnection();
 
         const orden = await Order.findById({ _id: id }).populate('Servicio')
 

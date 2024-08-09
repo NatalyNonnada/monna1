@@ -82,12 +82,11 @@ const postOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'No estamos disponibles para estas fechas intenta con otras' });
         }
 
-        // validamos el servicio ID
         if (!isValidObjectId(ids)) {
             return res.status(400).json({ message: 'Servicio no válido' });
         }
 
-        await db.connect();
+        await db.checkConnection();
 
         const dbServicio = await Servicio.findOne({ _id: ids, estado: true });
 
@@ -96,7 +95,6 @@ const postOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'El servicio fue dado de baja' });
         }
 
-        // validamos el ID de la hora
         if (!isValidObjectId(_id)) {
 
             return res.status(400).json({ message: 'Hora seleccionada no válida' });
@@ -113,7 +111,6 @@ const postOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Ocurrio un error, disculpa las molestias' });
         }
 
-        await db.connect();
 
         const existeHour = await Colaborador.findOne({
             category: dbServicio.category,
@@ -148,13 +145,9 @@ const postOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
         await newOrder.save();
 
-
-
         return res.status(201).json(newOrder._id);
 
     } catch (error) {
-        console.log(error);
-
         res.status(400).json({
             message: 'contacte a monna, no se pudo registrar su cita'
         })
@@ -181,8 +174,6 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
 
         if (existOr) {
 
-
-
             const newOrder: IUserReserva = {
                 _id: existOr._id.toString(),
                 idServicio: existOr._id.toString(),
@@ -197,13 +188,9 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(201).json(newOrder);
         }
 
-        await db.checkConnection();
-
         const existReser = await Reserva.findOne({ idServicio: id });
 
         if (existReser) {
-
-
 
             const newReser: IUserReserva = {
                 _id: existReser._id.toString(),
@@ -219,15 +206,11 @@ const getOder = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(201).json(newReser);
         }
 
-
-
         return res.status(400).json({
             message: 'La reserva fue eliminada'
         })
 
     } catch (error) {
-        console.log(error);
-
         res.status(400).json({
             message: 'contacte a monna, no se pudor cargar su reserva'
         })

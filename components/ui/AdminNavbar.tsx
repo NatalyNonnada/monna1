@@ -1,20 +1,25 @@
 'use client';
 import { useRouter } from 'next/router';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { AppBar, Box, Button, Container, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import Swal from 'sweetalert2';
 import AdbIcon from '@mui/icons-material/Adb';
 import MenuIcon from '@mui/icons-material/Menu';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { listPages } from '../../utils';
+import { useClear } from '../../hooks';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 export const AdminNavbar = () => {
 
     const { push } = useRouter();
-
+    const { clearAllNona, clearAllSale } = useClear();
+    const { data: session } = useSession();
 
     const accept = async () => {
-        signOut();
+        await signOut();
+        clearAllNona();
+        clearAllSale();
     }
 
     const onExitToApp = async () => {
@@ -96,7 +101,15 @@ export const AdminNavbar = () => {
                             </Button>
                         ))}
                     </Box>
-                    <Box sx={{ flexGrow: 0 }}>
+                    <Box sx={{ gap: 1, display: 'flex' }}>
+                        {session && (
+                            <Tooltip title={session?.user?.name}>
+                                <IconButton sx={{ p: 0 }} >
+                                    <AccountBoxIcon sx={{ fontSize: '25px' }} />
+                                </IconButton>
+                            </Tooltip>
+                        )}
+
                         <Tooltip title="Salir">
                             <IconButton
                                 onClick={onExitToApp}

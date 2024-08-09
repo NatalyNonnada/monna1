@@ -205,6 +205,10 @@ export const SaleProvider: FC<Props> = ({ children }) => {
         }
     }
 
+    const clearAllSale = () => {
+        dispatch({ type: 'Clear all Sale' });
+    }
+
     return (
         <SaleContext.Provider value={{
             ...state,
@@ -215,7 +219,8 @@ export const SaleProvider: FC<Props> = ({ children }) => {
             addSaleLoaded,
             addAdicionales,
             setReserva,
-            setState
+            setState,
+            clearAllSale
         }}>
             {children}
         </SaleContext.Provider>

@@ -108,7 +108,6 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200).json({ message: 'ok' });
 
     } catch (error) {
-        console.log(error);
         res.status(400).json({
             message: 'contacte con el CinCout, no se puedo finalizar la reserva'
         })

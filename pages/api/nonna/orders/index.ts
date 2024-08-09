@@ -24,14 +24,13 @@ const getOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
 
-        await db.connect();
+        await db.checkConnection();
 
         const Orderes = await Order.find().populate('Servicio').lean();
 
         res.status(200).json(Orderes);
 
     } catch (error) {
-        console.log(error);
         res.status(400).json({
             message: 'contacte a CinCout, no se pudor cargar la orden'
         })
@@ -47,7 +46,7 @@ const updateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         } = req.body as IOrder;
 
 
-        await db.connect();
+        await db.checkConnection();
 
         const dbOrder = await Order.findOne({ _id });
 
@@ -60,8 +59,6 @@ const updateOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200).json(dbOrder);
 
     } catch (error) {
-        console.log(error);
-
         res.status(400).json({
             message: 'contacte con CinCout, no se puedo actualizar la orden'
         })
@@ -82,8 +79,6 @@ const deleteOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
             return res.status(400).json({ message: 'No existe el Order' });
         }
-
-        await db.checkConnection();
 
         await Order.deleteOne({ _id: _id })
 

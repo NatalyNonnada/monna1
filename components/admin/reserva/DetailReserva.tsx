@@ -1,21 +1,19 @@
 import { useContext, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Box, Button, Card, CardContent, Divider, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Divider, Grid, IconButton, Typography } from '@mui/material';
 import { IReserva, Iservicio } from '../../../interface';
-import { initFecha, listPages, priceBodyTemplate, validations } from '../../../utils';
+import { initFecha, priceBodyTemplate } from '../../../utils';
 import { useReserva, useVenta } from '../../../hooks';
 import { LoadingCircular } from '../../../components/ui';
 import { SaleContext } from '../../../context';
 import { IColaborador } from '../../../interface/IColaborador';
 import html2canvas from 'html2canvas';
-import jsPDF, { TilingPattern } from 'jspdf';
+import jsPDF from 'jspdf';
 import { Add } from '@mui/icons-material';
 import { ModalAdicional } from '../servicios';
 import { TableSale } from './TableSale';
 import { DescuentoM } from './DescuentoM';
 
 interface Props { reserva: IReserva; }
-
 
 interface Itemsb {
     servicio: string;

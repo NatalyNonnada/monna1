@@ -27,6 +27,7 @@ interface ContextProps {
     addSaleToCart: (sale: IVenta) => void;
     addSaleLoaded: (lo: load) => void;
     addAdicionales: (adicionales: IVenta[]) => void;
+    clearAllSale: () => void;
 }
 
 export const SaleContext = createContext({} as ContextProps);

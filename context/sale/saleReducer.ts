@@ -20,6 +20,7 @@ type SaleActionType =
     | { type: '[Reserva] - Update', payload: IReserva }
     | { type: '[Reserva] - Remove', payload: IReserva }
     | { type: '[Reserva] - View', payload: IReserva }
+    | { type: 'Clear all Sale' }
 
 export const saleReducer = (state: SaleState, action: SaleActionType): SaleState => {
 
@@ -102,6 +103,37 @@ export const saleReducer = (state: SaleState, action: SaleActionType): SaleState
             return {
                 ...state,
                 viewReserva: { ...action.payload }
+            }
+        case 'Clear all Sale':
+            return {
+                ...state,
+                ventas: [],
+                venta: undefined,
+                total: 0,
+                subTotalg: 0,
+                desc: 0,
+                lsReservas: [],
+                viewReserva: {
+                    servicio: '',
+                    category: '',
+                    hora: {
+                        hour: '',
+                        estate: false
+                    },
+                    fecha: '',
+                    fechan: '',
+                    total: 0,
+                    isConfi: false,
+                    nureserva: 0,
+                    careserva: 0,
+                    iniPago: '',
+                    isPaid: false,
+                    nufinal: 0,
+                    cafinal: 0,
+                    finPago: ''
+                },
+                lodingReserva: true,
+                chargeReserva: false,
             }
 
         default:

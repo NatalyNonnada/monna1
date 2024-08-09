@@ -63,7 +63,6 @@ const updateServicios = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'Servicios no validos' });
         }
 
-
         await db.checkConnection();
 
         const dbOrder = await Colaborador.findById({ _id: id })
@@ -73,16 +72,13 @@ const updateServicios = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: 'No existe el colaborador' });
         }
 
-        await db.checkConnection();
-
         dbOrder.category = lstservicios;
-        dbOrder.save();
+
+        await dbOrder.save();
 
         res.status(200).json({ message: 'ok' });
 
     } catch (error) {
-        console.log(error);
-
         res.status(400).json({
             message: 'contacte a CinCout, no se pudo actualizar el servicio'
         })

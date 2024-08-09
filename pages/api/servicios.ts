@@ -17,15 +17,15 @@ const getServicios = async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
 
-        await db.connect();
+        await db.checkConnection();
 
         const servicios = await Servicio.find({ estado: true }, { createdAt: 0, updatedAt: 0, reser: 0 });
 
         const newServicios = servicios.filter(p => p.category !== 'Promo del mes');
+
         res.status(200).json(newServicios);
 
     } catch (error) {
-        console.log(error);
         res.status(400).json({
             message: 'contacte a monna'
         })
