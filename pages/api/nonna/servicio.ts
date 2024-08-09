@@ -4,10 +4,10 @@ import { Iservicio } from '../../../interface';
 import { Servicio } from '../../../model';
 import { isValidObjectId } from 'mongoose';
 
-type Categ = 'Promo del mes' | 'Manicure' | 'Pedicure' | 'Cejas' | 'Pestañas' | 'Adicionales'
+type Categ = 'Acrílicas' | 'Manicure' | 'Pedicure' | 'Cejas' | 'Pestañas' | 'Adicionales'
 
 function isValidCateg(value: any): value is Categ {
-    return ['Promo del mes', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'].includes(value);
+    return ['Acrílicas', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'].includes(value);
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {

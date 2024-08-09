@@ -276,7 +276,7 @@ const OrderPorPage: NextPage<Props> = ({ order }) => {
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
                                             {...register('iniPago')}
-                                            defaultValue={`Yape`}
+                                            defaultValue={`Efectivo`}
                                             label="Tipo de pago"
                                         >
                                             <MenuItem value="">Tipo de pago</MenuItem>
