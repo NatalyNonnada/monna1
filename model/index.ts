@@ -4,3 +4,4 @@ export { default as Order } from './Order';
 export { default as Reserva } from './Reserva';
 export { default as Venta } from './Venta';
 export { default as User } from './User';
+export { default as Boleta } from './Boleta';

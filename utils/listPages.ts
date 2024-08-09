@@ -42,7 +42,7 @@ export const listPages: SeedData = {
     ],
     categorias: [
         {
-            name: 'Promo del mes',
+            name: 'Acrílicas',
             ruta: ''
         },
         {

@@ -12,3 +12,4 @@ export * from './ISalef';
 export * from './IUser'
 export * from './contextAction';
 export * from './contextLoding';
+export * from './IBoleta';

@@ -21,7 +21,8 @@ const getServicios = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const servicios = await Servicio.find({ estado: true }, { createdAt: 0, updatedAt: 0, reser: 0 });
 
-        res.status(200).json(servicios);
+        const newServicios = servicios.filter(p => p.category !== 'Promo del mes');
+        res.status(200).json(newServicios);
 
     } catch (error) {
         console.log(error);

@@ -59,6 +59,7 @@ const updateServicio = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const dbServicio = await Servicio.findById({ _id });
 
+
         if (!dbServicio) {
             return res.status(400).json({ message: 'No existe el servicio' });
         }

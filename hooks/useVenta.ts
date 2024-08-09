@@ -18,7 +18,7 @@ export const useVenta = () => {
     const saveVenta = async (venta: ISalef): Promise<{ hasError: boolean }> => {
         try {
 
-            setState(true, 'lodingReserva');
+            // setState(true, 'lodingReserva');
 
             await tesloApi({
                 url: 'nonna/reserva/confirmar',
@@ -26,11 +26,11 @@ export const useVenta = () => {
                 data: venta
             });
 
-            setTimeout(() => {
-                replace('/nonna/reservas');
-                setState(false, 'lodingReserva');
+            // setTimeout(() => {
+            //     replace('/nonna/reservas');
+            //     setState(false, 'lodingReserva');
 
-            }, 900);
+            // }, 900);
 
 
             return { hasError: true }

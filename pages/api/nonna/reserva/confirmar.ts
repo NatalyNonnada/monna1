@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '../../../../database';
-import { Colaborador, Reserva } from '../../../../model';
+import { Boleta, Colaborador, Reserva } from '../../../../model';
 import { isValidObjectId } from 'mongoose';
-import { ISalef } from '../../../../interface';
+import { IBoleta, ISalef } from '../../../../interface';
+import { initFecha } from '@/utils';
 
 
 interface datar {
@@ -65,14 +66,13 @@ const confirmReserva = async (req: NextApiRequest, res: NextApiResponse) => {
 const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
 
-        const { servicios, idReserva } = req.body as ISalef;
+        const { ventas, servicios, idReserva, fecha, clienete, subttota, descuento, total } = req.body as ISalef;
 
         if (servicios.length <= 0) {
             return res.status(400).json({ message: 'Faltan servicios' });
         }
 
-
-        await db.connect();
+        await db.checkConnection();
 
         await Promise.all(servicios.map(async da => {
             if (da.codigo !== '-') {
@@ -93,6 +93,18 @@ const finReserva = async (req: NextApiRequest, res: NextApiResponse) => {
                 }
             }
         }));
+
+        const newBoleta = new Boleta({
+            documen: "NOTA DE VENTA",
+            fecha,
+            clienete,
+            subttota,
+            descuento,
+            total,
+            ventas,
+        })
+
+        await newBoleta.save();
 
         res.status(200).json({ message: 'ok' });
 
