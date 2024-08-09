@@ -3,10 +3,10 @@ import { db } from '../../../../database';
 import { Colaborador } from '../../../../model';
 import { isValidObjectId } from 'mongoose';
 
-type Categ = 'Promo del mes' | 'Manicure' | 'Pedicure' | 'Cejas' | 'Pestañas' | 'Adicionales'
+export type Categ = 'Acrílicas' | 'Manicure' | 'Pedicure' | 'Cejas' | 'Pestañas' | 'Adicionales'
 
 function isValidCateg(value: any): value is Categ {
-    return ['Promo del mes', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'].includes(value);
+    return ['Acrílicas', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'].includes(value);
 }
 
 interface bodyre {

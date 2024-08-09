@@ -5,11 +5,11 @@ import { startOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { IHour } from '../../interface';
 import { toZonedTime, format } from 'date-fns-tz';
+import { Categ } from './nonna/colaborador/servicios';
 
-type Categ = 'Promo del mes' | 'Manicure' | 'Pedicure' | 'Cejas' | 'Pestañas' | 'Adicionales'
 
 function isValidCateg(value: any): value is Categ {
-    return ['Promo del mes', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'].includes(value);
+    return ['Acrílicas', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'].includes(value);
 }
 
 const zoneTimea = () => {

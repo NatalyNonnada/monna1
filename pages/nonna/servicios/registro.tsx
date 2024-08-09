@@ -98,7 +98,7 @@ const ServicioRegistroPage: NextPage = () => {
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
                                             {...register('category')}
-                                            defaultValue={'Promo del mes'}
+                                            defaultValue={'Acrílicas'}
                                             label="Categoria"
                                         >
                                             {

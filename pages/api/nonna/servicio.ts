@@ -3,8 +3,7 @@ import { db } from '../../../database';
 import { Iservicio } from '../../../interface';
 import { Servicio } from '../../../model';
 import { isValidObjectId } from 'mongoose';
-
-type Categ = 'Acrílicas' | 'Manicure' | 'Pedicure' | 'Cejas' | 'Pestañas' | 'Adicionales'
+import { Categ } from './colaborador/servicios';
 
 function isValidCateg(value: any): value is Categ {
     return ['Acrílicas', 'Manicure', 'Pedicure', 'Cejas', 'Pestañas', 'Adicionales'].includes(value);
