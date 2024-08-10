@@ -8,7 +8,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { listPages } from '../../utils';
 import { useClear } from '../../hooks';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 export const AdminNavbar = () => {
 
@@ -103,13 +102,8 @@ export const AdminNavbar = () => {
                     </Box>
                     <Box sx={{ gap: 1, display: 'flex' }}>
                         {session && (
-                            <Tooltip title={session?.user?.name}>
-                                <IconButton sx={{ p: 0 }} >
-                                    <AccountBoxIcon sx={{ fontSize: '25px' }} />
-                                </IconButton>
-                            </Tooltip>
+                            <p>{session?.user?.name}</p>
                         )}
-
                         <Tooltip title="Salir">
                             <IconButton
                                 onClick={onExitToApp}
