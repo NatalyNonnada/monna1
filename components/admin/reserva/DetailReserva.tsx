@@ -6,8 +6,6 @@ import { useReserva, useVenta } from '../../../hooks';
 import { LoadingCircular } from '../../../components/ui';
 import { SaleContext } from '../../../context';
 import { IColaborador } from '../../../interface/IColaborador';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { Add } from '@mui/icons-material';
 import { ModalAdicional } from '../servicios';
 import { TableSale } from './TableSale';
@@ -35,43 +33,6 @@ interface Items {
     quanty: number;
 }
 
-const splitTextToFit = (pdf: jsPDF, text: string, maxWidth: number): string[] => {
-    const lines: string[] = [];
-    const words = text.split(' ');
-    let line = '';
-
-    words.forEach((word) => {
-        const testLine = line + (line ? ' ' : '') + word;
-        const { w: width } = pdf.getTextDimensions(testLine);
-
-        if (width > maxWidth) {
-            lines.push(line);
-            line = word;
-        } else {
-            line = testLine;
-        }
-    });
-
-    lines.push(line);
-    return lines;
-};
-
-
-const calculateContentHeight = (pdf: jsPDF, ventas: Items[]): number => {
-    let height = 0;
-    const lineHeight = 10;
-    height += 25;
-    ventas.forEach((da) => {
-        const lines = splitTextToFit(pdf, da.servicio, 70);
-        height += lines.length * lineHeight;
-        height += lineHeight;
-    });
-
-    height += 20;
-
-    return height;
-};
-
 function eliminarTildes(texto: string) {
     return texto.normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '');
@@ -83,7 +44,6 @@ const formatVenta = (data: Items): Itemsb => ({
     price: `${priceBodyTemplate({ price: `${data.total}` })}`.replace(/\s+/g, ''),
     subttota: `${priceBodyTemplate({ price: `${data.total * data.quanty}` })}`.replace(/\s+/g, ''),
 });
-
 
 export const DetailReserva = ({ reserva }: Props) => {
 
@@ -138,64 +98,12 @@ export const DetailReserva = ({ reserva }: Props) => {
     }, [reserva])
 
 
-    const generatePDF = async () => {
-        try {
-            const element = document.getElementById('receipt-content');
-            const fechacon = document.getElementById('fecha-content') as HTMLElement;
-            fechacon.style.marginTop = "200px";
-
-            if (element) {
-                const canvas = await html2canvas(element, { scale: 4 });
-                const imgData = canvas.toDataURL('image/png');
-
-                let pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: [80, 80]
-                });
-
-                let contentHeight = calculateContentHeight(pdf, ventas);
-
-                if (ventas.length <= 1) {
-                    contentHeight += 10;
-                }
-
-
-                pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: [80, contentHeight]
-                });
-
-                pdf.setFontSize(8);
-
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-
-                const logoUrl = '/logo-monna.png';
-                const logoImg = new Image();
-                logoImg.src = logoUrl;
-                logoImg.onload = () => {
-                    pdf.addImage(logoImg, 'PNG', 15, 5, 50, 15);
-                    pdf.save('receipt.pdf');
-                };
-            }
-
-            clearVenta();
-        } catch (error) {
-            console.error('Error generating PDF:', error);
-        }
-    };
-
-
     const handleFin = async () => {
         if (subTotalg > 0) {
 
             const newVentasb: Itemsb[] = ventas.map(formatVenta);
 
-            const { hasError } = await saveVenta({
+            await saveVenta({
                 servicios: ventas as Items[],
                 idReserva: reserva._id || '',
                 documen: 'NOTA DE VENTA',
@@ -205,11 +113,9 @@ export const DetailReserva = ({ reserva }: Props) => {
                 subttota: `${priceBodyTemplate({ price: `${subTotalg}` })}`.replace(/\s+/g, ''),
                 descuento: `${priceBodyTemplate({ price: `${desc}` })}`.replace(/\s+/g, ''),
                 total: `${priceBodyTemplate({ price: `${totalg}` })}`.replace(/\s+/g, ''),
-            })
+            });
 
-            if (hasError) {
-                generatePDF();
-            }
+            clearVenta();
         }
     }
 
