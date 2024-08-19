@@ -47,7 +47,13 @@ export const ServicioDetail = ({ open, servicio, handleClose, handleLoging, upda
             aria-labelledby="parent-modal-title"
             aria-describedby="parent-modal-description"
         >
-            <Card sx={{ ...styleCard }}>
+            <Card sx={{
+                ...styleCard,
+                display: 'flex',
+                flexDirection: 'column',
+                overflowY: 'auto',
+                maxHeight: '500px',
+            }}>
                 <CardContent>
                     <form onSubmit={handleSubmit(handleRegister)}>
                         <Grid container spacing={2}>
@@ -119,7 +125,8 @@ export const ServicioDetail = ({ open, servicio, handleClose, handleLoging, upda
 
                                 <FormControlLabel
                                     control={<Checkbox checked={getValues('estado')} />}
-                                    label='Estado'
+                                    className={getValues('estado') ? "color-acti" : "color-des"}
+                                    label={getValues('estado') ? 'Servicio activo' : 'Servicio desactivado'}
                                     onChange={() => onChangeSize(!servicio.estado)}
                                 />
                             </Grid>
